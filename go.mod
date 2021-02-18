@@ -1,4 +1,4 @@
-module PostUpAPI
+module github.com/maaaaakoto35/PostUpAPI
 
 go 1.16
 
