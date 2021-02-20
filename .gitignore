@@ -66,6 +66,6 @@ Temporary Items
 .apdisk
 
 # Throw go binary package
-.PostUpApi
+PostUpApi
 
 # End of https://www.toptal.com/developers/gitignore/api/go,macos,linux
