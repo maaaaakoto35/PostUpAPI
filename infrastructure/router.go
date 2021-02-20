@@ -17,7 +17,7 @@ func Init() {
 
 	e.GET("/users", func(c echo.Context) error { return userController.GetUsers(c) })
 	e.GET("/users/:id", func(c echo.Context) error { return userController.GetUser(c) })
-	e.POST("/users", func(c echo.Context) error { return userController.CreateUser(c) })
+	e.POST("/setup", func(c echo.Context) error { return userController.CreateUser(c) })
 	e.PUT("/users/:id", func(c echo.Context) error { return userController.UpdateUser(c) })
 	e.DELETE("/users/:id", func(c echo.Context) error { return userController.DeleteUser(c) })
 
