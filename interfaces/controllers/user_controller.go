@@ -41,7 +41,7 @@ func (controller *UserController) CreateUser(c Context) (err error) {
 
 // GetUsers this func is getting users.
 func (controller *UserController) GetUsers(c Context) (err error) {
-	users, err := controller.Interactor.Users()
+	users, err := controller.Interactor.ResUsers()
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, NewError(err))
@@ -54,7 +54,7 @@ func (controller *UserController) GetUsers(c Context) (err error) {
 // GetUser this func is getting a user.
 func (controller *UserController) GetUser(c Context) (err error) {
 	id, _ := strconv.Atoi(c.Param("id"))
-	user, err := controller.Interactor.UserByID(id)
+	user, err := controller.Interactor.ResUserByID(id)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, NewError(err))

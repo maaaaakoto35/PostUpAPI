@@ -1,9 +1,11 @@
 CREATE DATABASE IF NOT EXISTS live;
 USE live;
 
+DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
   `id`          INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  `user_id`     VARCHAR(256) NOT NULL,
+  `uuid`        VARCHAR(256) NOT NULL,
+  `user_id`     VARCHAR(256) PRIMARY KEY NOT NULL,
   `user_name`   VARCHAR(256) NOT NULL,
   `img`         VARCHAR(256) NULL,
   `password`    VARCHAR(256) NOT NULL,
