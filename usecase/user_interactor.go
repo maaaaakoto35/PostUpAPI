@@ -39,6 +39,14 @@ func (interactor *UserInteractor) Update(u domain.User) (user domain.User, err e
 	return
 }
 
+// UpdateValue this func is from controller to repository.
+func (interactor *UserInteractor) UpdateValue(userID string, colomn string, data string) (resUser domain.ResUser, err error) {
+	user, err := interactor.UserRepository.FindByUserID(userID)
+	user, err = interactor.UserRepository.UpdateValue(user, colomn, data)
+	resUser = domain.BindUser(user)
+	return
+}
+
 // DeleteByID this func is from controller to repository.
 func (interactor *UserInteractor) DeleteByID(user domain.User) (err error) {
 	err = interactor.UserRepository.DeleteByID(user)

@@ -66,11 +66,11 @@ func (controller *UserController) GetUser(c Context) (err error) {
 
 // UpdateUser this func is updating user.
 func (controller *UserController) UpdateUser(c Context) (err error) {
-	id, _ := strconv.Atoi(c.Param("id"))
-	u := domain.User{ID: id}
-	c.Bind(&u)
+	userID := c.Param("user_id")
+	colomn := c.Param("colomn")
+	data := c.Param("data")
 
-	user, err := controller.Interactor.Update(u)
+	user, err := controller.Interactor.UpdateValue(userID, colomn, data)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, NewError(err))
