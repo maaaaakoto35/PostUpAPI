@@ -48,7 +48,7 @@ func (ur *UserRepository) Update(u domain.User) (user domain.User, err error) {
 
 // UpdateValue this func is updating some columns in user.
 func (ur *UserRepository) UpdateValue(u domain.User, set string, value string) (user domain.User, err error) {
-	if err = ur.SaveValue(&u, &set, &value).Error; err != nil {
+	if err = ur.SaveValue(&u, set, value).Error; err != nil {
 		return
 	}
 	user = u

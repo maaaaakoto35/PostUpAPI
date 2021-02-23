@@ -7,6 +7,6 @@ type SQLHandler interface {
 	Find(interface{}, ...interface{}) *gorm.DB
 	Create(interface{}) *gorm.DB
 	Save(interface{}) *gorm.DB
-	SaveValue(interface{}, *string, *string) *gorm.DB
+	SaveValue(interface{}, string, string) *gorm.DB
 	Delete(interface{}) *gorm.DB
 }
