@@ -67,8 +67,8 @@ func (controller *UserController) GetUser(c Context) (err error) {
 // UpdateUser this func is updating user.
 func (controller *UserController) UpdateUser(c Context) (err error) {
 	userID := c.Param("user_id")
-	colomn := c.Param("colomn")
-	data := c.Param("data")
+	colomn := c.FormValue("colomn")
+	data := c.FormValue("data")
 
 	user, err := controller.Interactor.UpdateValue(userID, colomn, data)
 
