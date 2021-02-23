@@ -13,9 +13,9 @@ func (interactor *UserInteractor) UserByID(id int) (user domain.User, err error)
 	return
 }
 
-// ResUserByID this func is from controller to repository
-func (interactor *UserInteractor) ResUserByID(id int) (resUser domain.ResUser, err error) {
-	user, err := interactor.UserRepository.FindByID(id)
+// ResUserByUserID this func is from controller to repository
+func (interactor *UserInteractor) ResUserByUserID(userID string) (resUser domain.ResUser, err error) {
+	user, err := interactor.UserRepository.FindByUserID(userID)
 	resUser = domain.BindUser(user)
 	return
 }

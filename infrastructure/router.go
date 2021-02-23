@@ -15,11 +15,11 @@ func Init() {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
-	e.GET("/users", func(c echo.Context) error { return userController.GetUsers(c) })
-	e.GET("/users/:id", func(c echo.Context) error { return userController.GetUser(c) })
+	e.GET("/get-users", func(c echo.Context) error { return userController.GetUsers(c) })
+	e.GET("/get-user/:user_id", func(c echo.Context) error { return userController.GetUser(c) })
 	e.POST("/setup", func(c echo.Context) error { return userController.CreateUser(c) })
-	e.POST("/users/:user_id", func(c echo.Context) error { return userController.UpdateUser(c) })
-	e.DELETE("/users/:id", func(c echo.Context) error { return userController.DeleteUser(c) })
+	e.POST("/update-user/:user_id", func(c echo.Context) error { return userController.UpdateUser(c) })
+	e.DELETE("/delete-users/:id", func(c echo.Context) error { return userController.DeleteUser(c) })
 
 	e.Logger.Fatal(e.Start(":8080"))
 }
