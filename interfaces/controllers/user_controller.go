@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -69,6 +70,8 @@ func (controller *UserController) UpdateUser(c Context) (err error) {
 	userID := c.Param("user_id")
 	column := c.FormValue("column")
 	data := c.FormValue("data")
+
+	fmt.Printf("\n infra => set:%s, value:%s\n", column, data)
 
 	user, err := controller.Interactor.UpdateValue(userID, column, data)
 
