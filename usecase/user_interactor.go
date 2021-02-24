@@ -40,9 +40,9 @@ func (interactor *UserInteractor) Update(u domain.User) (user domain.User, err e
 }
 
 // UpdateValue this func is from controller to repository.
-func (interactor *UserInteractor) UpdateValue(userID string, colomn string, data string) (resUser domain.ResUser, err error) {
+func (interactor *UserInteractor) UpdateValue(userID string, column string, data string) (resUser domain.ResUser, err error) {
 	user, err := interactor.UserRepository.FindByUserID(userID)
-	user, err = interactor.UserRepository.UpdateValue(user, colomn, data)
+	user, err = interactor.UserRepository.UpdateValue(user, column, data)
 	resUser = domain.BindUser(user)
 	return
 }
