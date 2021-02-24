@@ -1,6 +1,8 @@
 package database
 
 import (
+	"fmt"
+
 	"github.com/maaaaakoto35/PostUpAPI/domain"
 )
 
@@ -48,6 +50,7 @@ func (ur *UserRepository) Update(u domain.User) (user domain.User, err error) {
 
 // UpdateValue this func is updating some columns in user.
 func (ur *UserRepository) UpdateValue(u domain.User, set string, value string) (user domain.User, err error) {
+	fmt.Printf("\n interface => set:%s, value:%s\n", set, value)
 	if err = ur.SaveValue(&u, set, value).Error; err != nil {
 		return
 	}

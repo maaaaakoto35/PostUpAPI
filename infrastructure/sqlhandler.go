@@ -55,7 +55,7 @@ func (handler *SQLHandler) Save(value interface{}) *gorm.DB {
 
 // SaveValue this func is updating some columns.
 func (handler *SQLHandler) SaveValue(in interface{}, set string, value string) *gorm.DB {
-	fmt.Printf("set:%s, value:%s", set, value)
+	fmt.Printf("\n infra => set:%s, value:%s\n", set, value)
 	return handler.Conn.Model(in).Update(set, value)
 }
 
