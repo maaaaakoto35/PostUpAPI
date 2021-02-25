@@ -13,12 +13,9 @@ CREATE TABLE IF NOT EXISTS `users` (
   `updated_at`  TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `followers`;
-CREATE TABLE IF NOT EXISTS `followers` (
-  `user_id`      VARCHAR(256) UNIQUE NOT NULL,
-  `user_name`    VARCHAR(256) NOT NULL,
-  `user_img`     VARCHAR(256) NOT NULL,
-  `follower`     VARCHAR(256) NOT NULL,
-  `following`    VARCHAR(256) NOT NULL,
-  `is_following` BOOLEAN
-)
+DROP TABLE IF EXISTS `follows`;
+CREATE TABLE IF NOT EXISTS `follows` (
+  `id`                   INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  `following_user_id`    VARCHAR(256) NOT NULL,
+  `followed_user_id`     VARCHAR(256) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
