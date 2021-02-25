@@ -21,4 +21,4 @@ CREATE TABLE IF NOT EXISTS `followers` (
   `follower`     VARCHAR(256) NOT NULL,
   `following`    VARCHAR(256) NOT NULL,
   `is_following` BOOLEAN
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)
