@@ -1,6 +1,10 @@
 package infrastructure
 
 import (
+	"io/ioutil"
+	"os"
+
+	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 	"github.com/maaaaakoto35/PostUpAPI/interfaces/controllers"
@@ -14,12 +18,37 @@ func Init() {
 
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
+	e.Use(middleware.CORS())
 
-	e.GET("/get-users", func(c echo.Context) error { return userController.GetUsers(c) })
-	e.GET("/get-user/:user_id", func(c echo.Context) error { return userController.GetUser(c) })
+	// 認証なし
 	e.POST("/setup", func(c echo.Context) error { return userController.CreateUser(c) })
-	e.POST("/update-user/:user_id", func(c echo.Context) error { return userController.UpdateUser(c) })
-	e.DELETE("/delete-users/:id", func(c echo.Context) error { return userController.DeleteUser(c) })
+	e.POST("/login", func(c echo.Context) error { return userController.LogIn(c) })
+
+	// 認証あり
+	r := e.Group("/api")
+	config := setJwtConfig()
+	r.Use(middleware.JWTWithConfig(config))
+
+	r.GET("/get-users", func(r echo.Context) error { return userController.GetUsers(r) })
+	r.GET("/get-user/:user_id", func(r echo.Context) error { return userController.GetUser(r) })
+	r.POST("/update-user/:user_id", func(r echo.Context) error { return userController.UpdateUser(r) })
+	r.DELETE("/delete-users/:id", func(r echo.Context) error { return userController.DeleteUser(r) })
 
 	e.Logger.Fatal(e.Start(":8080"))
+}
+
+func setJwtConfig() middleware.JWTConfig {
+	// 公開鍵読み込み
+	pubPath := os.Getenv("PUBLIC_KEY_PATH")
+	pubKeyData, err := ioutil.ReadFile(pubPath)
+	if err != nil {
+		panic(err)
+	}
+	pubKey, err := jwt.ParseECPrivateKeyFromPEM(pubKeyData)
+
+	return middleware.JWTConfig{
+		Claims:        &controllers.JwtCustomClaims{},
+		SigningKey:    pubKey,
+		SigningMethod: "RS256",
+	}
 }

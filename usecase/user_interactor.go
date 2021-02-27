@@ -48,7 +48,8 @@ func (interactor *UserInteractor) UpdateValue(userID string, column string, data
 }
 
 // DeleteByID this func is from controller to repository.
-func (interactor *UserInteractor) DeleteByID(user domain.User) (err error) {
+func (interactor *UserInteractor) DeleteByID(userID string) (err error) {
+	user, err := interactor.UserRepository.FindByUserID(userID)
 	err = interactor.UserRepository.DeleteByID(user)
 	return
 }
