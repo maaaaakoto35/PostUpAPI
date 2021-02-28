@@ -14,6 +14,12 @@ type UserController struct {
 	Interactor usecase.UserInteractor
 }
 
+// UpdateValue this struct is recieving posting data.
+type UpdateValue struct {
+	Column string `json:"column"`
+	Data   string `json:"data"`
+}
+
 // NewUserController this func is initializing UserController.
 func NewUserController(sqlHandler database.SQLHandler) *UserController {
 	return &UserController{
@@ -53,8 +59,8 @@ func (controller *UserController) GetUsers(c Context) (err error) {
 
 // GetUser this func is getting a user.
 func (controller *UserController) GetUser(c Context) (err error) {
-	id, _ := strconv.Atoi(c.Param("id"))
-	user, err := controller.Interactor.ResUserByID(id)
+	userID := c.Param("user_id")
+	user, err := controller.Interactor.ResUserByUserID(userID)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, NewError(err))
@@ -66,11 +72,11 @@ func (controller *UserController) GetUser(c Context) (err error) {
 
 // UpdateUser this func is updating user.
 func (controller *UserController) UpdateUser(c Context) (err error) {
-	id, _ := strconv.Atoi(c.Param("id"))
-	u := domain.User{ID: id}
-	c.Bind(&u)
+	userID := c.Param("user_id")
+	updateValue := new(UpdateValue)
+	c.Bind(updateValue)
 
-	user, err := controller.Interactor.Update(u)
+	user, err := controller.Interactor.UpdateValue(userID, updateValue.Column, updateValue.Data)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, NewError(err))
