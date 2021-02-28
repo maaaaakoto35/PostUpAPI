@@ -67,5 +67,6 @@ Temporary Items
 
 # Throw go binary package
 PostUpApi
+rsa/
 
 # End of https://www.toptal.com/developers/gitignore/api/go,macos,linux
