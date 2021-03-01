@@ -6,6 +6,7 @@ import "github.com/maaaaakoto35/PostUpAPI/domain"
 type UserRepository interface {
 	FindByID(id int) (domain.User, error)
 	FindByUserID(string) (domain.User, error)
+	FindConditions(...interface{}) (domain.User, error)
 	Store(domain.User) (domain.User, error)
 	Update(domain.User) (domain.User, error)
 	UpdateValue(domain.User, string, string) (domain.User, error)

@@ -13,6 +13,20 @@ func (interactor *UserInteractor) UserByID(id int) (user domain.User, err error)
 	return
 }
 
+// CanLogin this func is existing user_id and password
+func (interactor *UserInteractor) CanLogin(userID, password string) (bool, error) {
+	_, err := interactor.UserRepository.FindConditions(
+		domain.User{
+			UserID: userID,
+			Pass:   password,
+		},
+	)
+	if err != nil {
+		return false, err
+	}
+	return true, err
+}
+
 // ResUserByUserID this func is from controller to repository
 func (interactor *UserInteractor) ResUserByUserID(userID string) (resUser domain.ResUser, err error) {
 	user, err := interactor.UserRepository.FindByUserID(userID)
@@ -48,7 +62,8 @@ func (interactor *UserInteractor) UpdateValue(userID string, column string, data
 }
 
 // DeleteByID this func is from controller to repository.
-func (interactor *UserInteractor) DeleteByID(user domain.User) (err error) {
+func (interactor *UserInteractor) DeleteByID(userID string) (err error) {
+	user, err := interactor.UserRepository.FindByUserID(userID)
 	err = interactor.UserRepository.DeleteByID(user)
 	return
 }
