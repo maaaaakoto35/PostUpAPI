@@ -17,14 +17,14 @@ type JwtCustomClaims struct {
 
 // jwtUserID this middleware is taking user_id and user_name.
 func jwtUserID(c Context) string {
-	user := c.Get("user").(*jwt.Token)
+	user := c.Get("jwt").(*jwt.Token)
 	claims := user.Claims.(*JwtCustomClaims)
 	return claims.UserID
 }
 
 // jwtUserID this middleware is taking user_id and user_name.
 func jwtUserName(c Context) string {
-	user := c.Get("user").(*jwt.Token)
+	user := c.Get("jwt").(*jwt.Token)
 	claims := user.Claims.(*JwtCustomClaims)
 	return claims.UserName
 }
@@ -32,7 +32,7 @@ func jwtUserName(c Context) string {
 // setJwt this func is setting token.
 func setJwt(userID string, userName string) (t string, err error) {
 	// 秘密鍵を読み込み
-	keyPath := os.Getenv("SECRET_KEY_PATH")
+	keyPath := os.Getenv("PUBLIC_KEY_PATH")
 	keyData, err := ioutil.ReadFile(keyPath)
 	if err != nil {
 		panic(err)

@@ -39,7 +39,7 @@ func Init() {
 
 func setJwtConfig() middleware.JWTConfig {
 	// 公開鍵読み込み
-	pubPath := os.Getenv("PUBLIC_KEY_PATH")
+	pubPath := os.Getenv("SECRET_KEY_PATH")
 	pubKeyData, err := ioutil.ReadFile(pubPath)
 	if err != nil {
 		panic(err)
@@ -49,6 +49,7 @@ func setJwtConfig() middleware.JWTConfig {
 	return middleware.JWTConfig{
 		Claims:        &controllers.JwtCustomClaims{},
 		SigningKey:    pubKey,
+		ContextKey:    "jwt",
 		SigningMethod: "RS256",
 	}
 }
