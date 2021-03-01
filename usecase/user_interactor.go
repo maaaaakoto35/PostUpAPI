@@ -13,13 +13,14 @@ func (interactor *UserInteractor) UserByID(id int) (user domain.User, err error)
 	return
 }
 
-// canLogin this func is existing user_id and password
+// CanLogin this func is existing user_id and password
 func (interactor *UserInteractor) CanLogin(userID, password string) (bool, error) {
-	user := domain.User{
-		UserID: userID,
-		Pass:   password,
-	}
-	_, err := interactor.UserRepository.FindConditions(user)
+	_, err := interactor.UserRepository.FindConditions(
+		domain.User{
+			UserID: userID,
+			Pass:   password,
+		},
+	)
 	if err != nil {
 		return false, err
 	}

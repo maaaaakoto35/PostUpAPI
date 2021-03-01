@@ -48,6 +48,13 @@ func (controller *UserController) CreateUser(c Context) (err error) {
 func (controller *UserController) LogIn(c Context) (err error) {
 	u := domain.User{}
 	c.Bind(&u)
+
+	// varidattion
+	if u.UserID == "" || u.Pass == "" {
+		c.JSON(http.StatusInternalServerError, "dose not match args")
+		return
+	}
+
 	result, err := controller.Interactor.CanLogin(u.UserID, u.Pass)
 	if err != nil || result != true {
 		c.JSON(http.StatusNonAuthoritativeInfo, NewError(err))
