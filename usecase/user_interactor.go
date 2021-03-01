@@ -13,6 +13,19 @@ func (interactor *UserInteractor) UserByID(id int) (user domain.User, err error)
 	return
 }
 
+// canLogin this func is existing user_id and password
+func (interactor *UserInteractor) CanLogin(userID, password string) (bool, error) {
+	user := domain.User{
+		UserID: userID,
+		Pass:   password,
+	}
+	_, err := interactor.UserRepository.FindConditions(user)
+	if err != nil {
+		return false, err
+	}
+	return true, err
+}
+
 // ResUserByUserID this func is from controller to repository
 func (interactor *UserInteractor) ResUserByUserID(userID string) (resUser domain.ResUser, err error) {
 	user, err := interactor.UserRepository.FindByUserID(userID)

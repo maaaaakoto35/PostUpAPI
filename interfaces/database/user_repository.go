@@ -28,6 +28,14 @@ func (ur *UserRepository) FindByUserID(userID string) (user domain.User, err err
 	return
 }
 
+// FindConditions this func is finding user by some conditions.
+func (ur *UserRepository) FindConditions(where ...interface{}) (user domain.User, err error) {
+	if err = ur.Find(&user, where...).Error; err != nil {
+		return
+	}
+	return
+}
+
 // Store this func is storing user.
 func (ur *UserRepository) Store(u domain.User) (user domain.User, err error) {
 	if err = ur.Create(&u).Error; err != nil {

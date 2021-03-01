@@ -39,12 +39,12 @@ func Init() {
 
 func setJwtConfig() middleware.JWTConfig {
 	// 公開鍵読み込み
-	pubPath := os.Getenv("SECRET_KEY_PATH")
+	pubPath := os.Getenv("PUBLIC_KEY_PATH")
 	pubKeyData, err := ioutil.ReadFile(pubPath)
 	if err != nil {
 		panic(err)
 	}
-	pubKey, err := jwt.ParseECPrivateKeyFromPEM(pubKeyData)
+	pubKey, err := jwt.ParseRSAPublicKeyFromPEM(pubKeyData)
 
 	return middleware.JWTConfig{
 		Claims:        &controllers.JwtCustomClaims{},

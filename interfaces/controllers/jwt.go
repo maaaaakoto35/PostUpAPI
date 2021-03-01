@@ -32,7 +32,7 @@ func jwtUserName(c Context) string {
 // setJwt this func is setting token.
 func setJwt(userID string, userName string) (t string, err error) {
 	// 秘密鍵を読み込み
-	keyPath := os.Getenv("PUBLIC_KEY_PATH")
+	keyPath := os.Getenv("SECRET_KEY_PATH")
 	keyData, err := ioutil.ReadFile(keyPath)
 	if err != nil {
 		panic(err)

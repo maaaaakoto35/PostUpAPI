@@ -48,14 +48,14 @@ func (controller *UserController) CreateUser(c Context) (err error) {
 func (controller *UserController) LogIn(c Context) (err error) {
 	u := domain.User{}
 	c.Bind(&u)
-	user, err := controller.Interactor.ResUserByUserID(u.UserID)
-	if err != nil {
+	result, err := controller.Interactor.CanLogin(u.UserID, u.Pass)
+	if err != nil || result != true {
 		c.JSON(http.StatusNonAuthoritativeInfo, NewError(err))
 		return
 	}
 
 	// set custom claims
-	token, err := setJwt(user.UserID, user.UserName)
+	token, err := setJwt(u.UserID, u.UserName)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, NewError(err))
 		return
