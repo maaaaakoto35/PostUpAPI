@@ -15,7 +15,7 @@ func Init() {
 	e := echo.New()
 
 	userController := controllers.NewUserController(NewMySQLDb())
-	postController := controllers.NewPostController(NewMySQLDb())
+	postDB, postStorage := controllers.NewPostController(NewMySQLDb())
 
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
@@ -37,7 +37,8 @@ func Init() {
 	r.DELETE("/delete-users/:id", func(r echo.Context) error { return userController.DeleteUser(r) })
 
 	// post
-	r.GET("/get-upload-info", func(r echo.Context) error { return postController.CreatePost(r) })
+	r.GET("/get-federation", func(r echo.Context) error { return postStorage.GetFederation(r) })
+	r.POST("/postup", func(r echo.Context) error { return postDB.CreatePost(r) })
 
 	e.Logger.Fatal(e.Start(":8080"))
 }

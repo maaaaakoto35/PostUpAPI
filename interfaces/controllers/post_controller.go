@@ -5,6 +5,7 @@ import (
 
 	"github.com/maaaaakoto35/PostUpAPI/domain"
 	"github.com/maaaaakoto35/PostUpAPI/interfaces/database"
+	"github.com/maaaaakoto35/PostUpAPI/interfaces/storage"
 	"github.com/maaaaakoto35/PostUpAPI/usecase"
 )
 
@@ -13,15 +14,34 @@ type PostController struct {
 	Interactor usecase.PostInteractor
 }
 
+// StsController this struct is recieving interface.
+type StsController struct {
+	StsController storage.StorageHandler
+}
+
 // NewPostController this func is initializing PostController.
-func NewPostController(sqlHandler database.SQLHandler) *PostController {
-	return &PostController{
+func NewPostController(sqlHandler database.SQLHandler) (db *PostController, storage *StsController) {
+	db = &PostController{
 		Interactor: usecase.PostInteractor{
 			PostRepository: &database.PostRepository{
 				SQLHandler: sqlHandler,
 			},
 		},
 	}
+	storage = &StsController{}
+	return
+}
+
+// GetFederation this func is response token.
+func (controller *StsController) GetFederation(c Context) (err error) {
+	userID := jwtUserID(c)
+	federationToken, err := controller.StsController.GetFederationToken(userID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, NewError(err))
+		return
+	}
+	c.JSON(http.StatusAccepted, federationToken)
+	return
 }
 
 // CreatePost this func is creating post.

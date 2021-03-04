@@ -8,8 +8,8 @@ type Post struct {
 	UserID    string `json:"user_id"`
 	File      string
 	Introduce string
-	Good      string
-	Watch     string
+	Good      int
+	Watch     int
 	CreatedAt time.Time `json:"-"`
 	UpdatedAt time.Time `json:"-"`
 }

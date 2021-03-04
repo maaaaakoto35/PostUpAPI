@@ -9,6 +9,9 @@ import (
 	"github.com/aws/aws-sdk-go/service/sts"
 )
 
+// StorageHandler struct
+type StorageHandler struct{}
+
 // GetFederationToken this func is return token.
 func GetFederationToken(userID string) (result *sts.GetFederationTokenOutput, err error) {
 	svc := sts.New(session.New())
@@ -18,16 +21,6 @@ func GetFederationToken(userID string) (result *sts.GetFederationTokenOutput, er
 		DurationSeconds: aws.Int64(3600),
 		Name:            aws.String(userID),
 		Policy:          policy,
-		Tags: []*sts.Tag{
-			{
-				Key:   aws.String("Project"),
-				Value: aws.String("Pegausus"),
-			},
-			{
-				Key:   aws.String("Cost-Center"),
-				Value: aws.String("98765"),
-			},
-		},
 	}
 
 	result, err = svc.GetFederationToken(input)
@@ -66,7 +59,7 @@ func getPolicy(userID string) string {
 			\"Action\": [
 				\"s3:PutObject\",
 			],
-			\"Resource\": [\"arn:aws:s3:::post/%s/*\"]
+			\"Resource\": [\"arn:aws:s3:::post/output/%s/*\"]
 			}
 		]
 	}`, userID)
