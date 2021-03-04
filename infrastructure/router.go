@@ -15,6 +15,7 @@ func Init() {
 	e := echo.New()
 
 	userController := controllers.NewUserController(NewMySQLDb())
+	postController := controllers.NewPostController(NewMySQLDb())
 
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
@@ -29,10 +30,14 @@ func Init() {
 	config := setJwtConfig()
 	r.Use(middleware.JWTWithConfig(config))
 
+	// user
 	r.GET("/get-users", func(r echo.Context) error { return userController.GetUsers(r) })
 	r.GET("/get-user/:user_id", func(r echo.Context) error { return userController.GetUser(r) })
 	r.POST("/update-user/:user_id", func(r echo.Context) error { return userController.UpdateUser(r) })
 	r.DELETE("/delete-users/:id", func(r echo.Context) error { return userController.DeleteUser(r) })
+
+	// post
+	r.GET("/get-upload-info", func(r echo.Context) error { return postController.CreatePost(r) })
 
 	e.Logger.Fatal(e.Start(":8080"))
 }
