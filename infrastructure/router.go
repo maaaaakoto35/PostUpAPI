@@ -39,6 +39,8 @@ func Init() {
 	// post
 	r.GET("/get-federation", func(r echo.Context) error { return postStorage.GetFederation(r) })
 	r.POST("/postup", func(r echo.Context) error { return postDB.CreatePost(r) })
+	r.POST("/watch", func(r echo.Context) error { return postDB.WatchPost(r) })
+	r.POST("/good", func(r echo.Context) error { return postDB.GoodPost(r) })
 
 	e.Logger.Fatal(e.Start(":8080"))
 }

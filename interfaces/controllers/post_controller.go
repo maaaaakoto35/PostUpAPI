@@ -48,12 +48,67 @@ func (controller *StsController) GetFederation(c Context) (err error) {
 func (controller *PostController) CreatePost(c Context) (err error) {
 	p := domain.Post{}
 	c.Bind(&p)
-	user, err := controller.Interactor.Add(p)
+	post, err := controller.Interactor.Add(p)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, NewError(err))
 		return
 	}
-	c.JSON(http.StatusCreated, user)
+	c.JSON(http.StatusCreated, post)
+	return
+}
+
+// GetUserPost this func is getting user posts.
+func (controller *PostController) GetUserPost(c Context) (err error) {
+	userID := c.Param("user_id")
+	post, err := controller.Interactor.PostByUserID(userID)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, NewError(err))
+		return
+	}
+	c.JSON(http.StatusAccepted, post)
+	return
+}
+
+// WatchPost this func is watching post.
+func (controller *PostController) WatchPost(c Context) (err error) {
+	// userID := jwtUserID(c)
+	post := domain.Post{}
+	c.Bind(&post)
+	post.Watch++
+	_, err = controller.Interactor.Update(post)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, NewError(err))
+		return
+	}
+	c.JSON(http.StatusAccepted, struct {
+		Status string `json:"status"`
+	}{
+		Status: "success",
+	},
+	)
+	return
+}
+
+// GoodPost this func is doing good post.
+func (controller *PostController) GoodPost(c Context) (err error) {
+	// userID := jwtUserID(c)
+	post := domain.Post{}
+	c.Bind(&post)
+	post.Good++
+	_, err = controller.Interactor.Update(post)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, NewError(err))
+		return
+	}
+	c.JSON(http.StatusAccepted, struct {
+		Status string `json:"status"`
+	}{
+		Status: "success",
+	},
+	)
 	return
 }

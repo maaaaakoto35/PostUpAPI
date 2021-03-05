@@ -4,13 +4,13 @@ import "time"
 
 // Post this struct is posts model.
 type Post struct {
-	ID        int    `gorm:"primaryKey" json:"id"`
-	UserID    string `json:"user_id"`
-	File      string
-	Introduce string
-	Good      int
-	Watch     int
-	CreatedAt time.Time `json:"-"`
+	ID        int       `gorm:"primaryKey" json:"id"`
+	UserID    string    `json:"user_id"`
+	File      string    `json:"file"`
+	Introduce string    `json:"introduce"`
+	Good      int       `json:"good"`
+	Watch     int       `json:"watch"`
+	CreatedAt time.Time `json:"create_at"`
 	UpdatedAt time.Time `json:"-"`
 }
 

@@ -13,6 +13,12 @@ func (pi *PostInteractor) PostByID(id int) (post domain.Post, err error) {
 	return
 }
 
+// PostByUserID this func is from controller to repository.
+func (pi *PostInteractor) PostByUserID(userID string) (post domain.Post, err error) {
+	post, err = pi.PostRepository.FindByUserID(userID)
+	return
+}
+
 // Add this func is from controller to repository.
 func (pi *PostInteractor) Add(p domain.Post) (post domain.Post, err error) {
 	post, err = pi.PostRepository.Store(p)
