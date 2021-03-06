@@ -38,7 +38,7 @@ func Init() {
 
 	// post
 	r.GET("/get-federation", func(r echo.Context) error { return postStorage.GetFederation(r) })
-	r.GET("/get-presign-url", func(r echo.Context) error { return postStorage.GetPresignedURL(r) })
+	r.GET("/get-presign-url/:num", func(r echo.Context) error { return postStorage.GetPresignedURL(r) })
 	r.GET("/postup-num/:user_id", func(r echo.Context) error { return postDB.GetPostNum(r) })
 	r.POST("/postup", func(r echo.Context) error { return postDB.CreatePost(r) })
 	r.POST("/watch", func(r echo.Context) error { return postDB.WatchPost(r) })
