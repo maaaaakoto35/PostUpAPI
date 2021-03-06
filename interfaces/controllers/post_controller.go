@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/maaaaakoto35/PostUpAPI/domain"
 	"github.com/maaaaakoto35/PostUpAPI/interfaces/database"
@@ -14,13 +15,13 @@ type PostController struct {
 	Interactor usecase.PostInteractor
 }
 
-// StsController this struct is recieving interface.
-type StsController struct {
-	StsController storage.StorageHandler
+// StorageController this struct is recieving interface.
+type StorageController struct {
+	StorageController storage.StorageHandler
 }
 
 // NewPostController this func is initializing PostController.
-func NewPostController(sqlHandler database.SQLHandler) (db *PostController, storage *StsController) {
+func NewPostController(sqlHandler database.SQLHandler) (db *PostController, storage *StorageController) {
 	db = &PostController{
 		Interactor: usecase.PostInteractor{
 			PostRepository: &database.PostRepository{
@@ -28,19 +29,40 @@ func NewPostController(sqlHandler database.SQLHandler) (db *PostController, stor
 			},
 		},
 	}
-	storage = &StsController{}
+	storage = &StorageController{}
 	return
 }
 
 // GetFederation this func is response token.
-func (controller *StsController) GetFederation(c Context) (err error) {
+func (controller *StorageController) GetFederation(c Context) (err error) {
 	userID := jwtUserID(c)
-	federationToken, err := controller.StsController.GetFederationToken(userID)
+	federationToken, err := controller.StorageController.GetFederationToken(userID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, NewError(err))
 		return
 	}
 	c.JSON(http.StatusAccepted, federationToken)
+	return
+}
+
+// GetPresignedURL this func is getting pre-sign url.
+func (controller *StorageController) GetPresignedURL(c Context) (err error) {
+	userID := jwtUserID(c)
+	temp := c.Param("num")
+	num, _ := strconv.Atoi(temp)
+	url, err := controller.StorageController.GetPresignedURL(userID, num)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, NewError(err))
+		return
+	}
+	c.JSON(http.StatusAccepted, struct {
+		Status string `json:"status"`
+		URL    string `json:"url"`
+	}{
+		Status: "success",
+		URL:    url,
+	})
 	return
 }
 
@@ -71,6 +93,25 @@ func (controller *PostController) GetUserPost(c Context) (err error) {
 	return
 }
 
+// GetPostNum this func is getting post upping num.
+func (controller *PostController) GetPostNum(c Context) (err error) {
+	userID := c.Param("user_id")
+	num, err := controller.Interactor.NumUserPost(userID)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, NewError(err))
+		return
+	}
+	c.JSON(http.StatusAccepted, struct {
+		Status  string `json:"status"`
+		PostNum int    `json:"post_num"`
+	}{
+		Status:  "success",
+		PostNum: num,
+	})
+	return
+}
+
 // WatchPost this func is watching post.
 func (controller *PostController) WatchPost(c Context) (err error) {
 	// userID := jwtUserID(c)
@@ -87,8 +128,7 @@ func (controller *PostController) WatchPost(c Context) (err error) {
 		Status string `json:"status"`
 	}{
 		Status: "success",
-	},
-	)
+	})
 	return
 }
 

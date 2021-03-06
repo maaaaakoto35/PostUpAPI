@@ -19,6 +19,15 @@ func (pi *PostInteractor) PostByUserID(userID string) (post domain.Post, err err
 	return
 }
 
+// NumUserPost this func is a number of user's post.
+func (pi *PostInteractor) NumUserPost(userID string) (num int, err error) {
+	post := domain.Post{
+		UserID: userID,
+	}
+	num, err = pi.PostRepository.CountConditions(post)
+	return
+}
+
 // Add this func is from controller to repository.
 func (pi *PostInteractor) Add(p domain.Post) (post domain.Post, err error) {
 	post, err = pi.PostRepository.Store(p)

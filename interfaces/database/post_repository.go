@@ -34,6 +34,15 @@ func (pr *PostRepository) FindConditions(where ...interface{}) (post domain.Post
 	return
 }
 
+// CountConditions this func is a number of post conditions.
+func (pr *PostRepository) CountConditions(where ...interface{}) (count int, err error) {
+	count, err = pr.Count(domain.Post{}, where...)
+	if err != nil {
+		return -1, err
+	}
+	return
+}
+
 // Store this func is storing post.
 func (pr *PostRepository) Store(p domain.Post) (post domain.Post, err error) {
 	if err = pr.Create(&p).Error; err != nil {
