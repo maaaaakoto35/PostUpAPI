@@ -14,7 +14,9 @@ type StorageHandler struct{}
 
 // GetFederationToken this func is return token.
 func GetFederationToken(userID string) (result *sts.GetFederationTokenOutput, err error) {
-	svc := sts.New(session.New())
+	svc := sts.New(session.Must(session.NewSessionWithOptions(session.Options{
+		SharedConfigState: session.SharedConfigEnable,
+	})))
 	policy := aws.String(getPolicy(userID))
 
 	input := &sts.GetFederationTokenInput{
