@@ -4,6 +4,7 @@ import (
 	"crypto/rand"
 	"errors"
 	"fmt"
+	"os"
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -85,9 +86,10 @@ func GetPresignedURL(userID string, num int) (url string, err error) {
 
 	// request
 	fileHash, err := makeRandomStr(RandomStringLength)
-	key := fmt.Sprintf("post/output/%s/%d-%s", userID, num, fileHash)
+	backetName := os.Getenv("S3_BACKET")
+	key := fmt.Sprintf("output/%s/%d-%s", userID, num, fileHash)
 	c, _ := svc.PutObjectRequest(&s3.PutObjectInput{
-		Bucket: aws.String("post"),
+		Bucket: aws.String(backetName),
 		Key:    aws.String(key),
 	})
 
