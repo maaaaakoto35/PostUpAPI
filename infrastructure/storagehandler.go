@@ -16,6 +16,12 @@ import (
 // StorageHandler struct
 type StorageHandler struct{}
 
+// PresignURLLimitMin this variable is url limit.
+const PresignURLLimitMin = 15
+
+// RandomStringLength this variable is length of random string.
+const RandomStringLength = 10
+
 // GetFederationToken this func is return token.
 func GetFederationToken(userID string) (result *sts.GetFederationTokenOutput, err error) {
 	svc := sts.New(session.Must(session.NewSessionWithOptions(session.Options{
@@ -78,7 +84,7 @@ func GetPresignedURL(userID string, num int) (url string, err error) {
 	})))
 
 	// request
-	fileHash, err := makeRandomStr(10)
+	fileHash, err := makeRandomStr(RandomStringLength)
 	key := fmt.Sprintf("post/output/%s/%d-%s", userID, num, fileHash)
 	c, _ := svc.PutObjectRequest(&s3.PutObjectInput{
 		Bucket: aws.String("post"),
@@ -86,7 +92,7 @@ func GetPresignedURL(userID string, num int) (url string, err error) {
 	})
 
 	// url
-	url, err = c.Presign(15 * time.Minute)
+	url, err = c.Presign(PresignURLLimitMin * time.Minute)
 	if err != nil {
 		fmt.Println("error presigning request", err)
 		return
