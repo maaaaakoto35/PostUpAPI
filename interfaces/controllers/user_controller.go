@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/maaaaakoto35/PostUpAPI/domain"
 	"github.com/maaaaakoto35/PostUpAPI/interfaces/database"
@@ -45,6 +44,39 @@ func (controller *UserController) CreateUser(c Context) (err error) {
 	return
 }
 
+// LogIn this func is logging in.
+func (controller *UserController) LogIn(c Context) (err error) {
+	u := domain.User{}
+	c.Bind(&u)
+
+	// varidattion
+	if u.UserID == "" || u.Pass == "" {
+		c.JSON(http.StatusInternalServerError, "dose not match args")
+		return
+	}
+
+	result, err := controller.Interactor.CanLogin(u.UserID, u.Pass)
+	if err != nil || result != true {
+		c.JSON(http.StatusNonAuthoritativeInfo, NewError(err))
+		return
+	}
+
+	// set custom claims
+	token, err := setJwt(u.UserID, u.UserName)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, NewError(err))
+		return
+	}
+	c.JSON(http.StatusAccepted, struct {
+		Status string `json:"status"`
+		Token  string `json:"token"`
+	}{
+		Status: "success",
+		Token:  token,
+	})
+	return
+}
+
 // GetUsers this func is getting users.
 func (controller *UserController) GetUsers(c Context) (err error) {
 	users, err := controller.Interactor.ResUsers()
@@ -72,7 +104,7 @@ func (controller *UserController) GetUser(c Context) (err error) {
 
 // UpdateUser this func is updating user.
 func (controller *UserController) UpdateUser(c Context) (err error) {
-	userID := c.Param("user_id")
+	userID := jwtUserID(c)
 	updateValue := new(UpdateValue)
 	c.Bind(updateValue)
 
@@ -88,10 +120,9 @@ func (controller *UserController) UpdateUser(c Context) (err error) {
 
 // DeleteUser this func is deleting user.
 func (controller *UserController) DeleteUser(c Context) (err error) {
-	id, _ := strconv.Atoi(c.Param("id"))
-	user := domain.User{ID: id}
+	userID := jwtUserID(c)
 
-	err = controller.Interactor.DeleteByID(user)
+	err = controller.Interactor.DeleteByID(userID)
 	if err != nil {
 		c.JSON(500, NewError(err))
 		return

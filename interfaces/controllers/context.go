@@ -5,5 +5,6 @@ type Context interface {
 	Param(string) string
 	Bind(interface{}) error
 	JSON(int, interface{}) error
-	FormValue(string) string
+	Set(string, interface{})
+	Get(string) interface{}
 }
