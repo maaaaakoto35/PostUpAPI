@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/maaaaakoto35/PostUpAPI/domain"
 	"github.com/maaaaakoto35/PostUpAPI/interfaces/database"
@@ -48,8 +47,8 @@ func (controller *StorageController) GetFederation(c Context) (err error) {
 // GetPresignedURL this func is getting pre-sign url.
 func (controller *StorageController) GetPresignedURL(c Context) (err error) {
 	userID := jwtUserID(c)
-	temp := c.Param("num")
-	num, _ := strconv.Atoi(temp)
+	temp := usecase.PostInteractor{}
+	num, err := temp.NumUserPost(userID)
 	url, err := controller.StorageController.GetPresignedURL(userID, num)
 
 	if err != nil {
