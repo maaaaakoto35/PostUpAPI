@@ -12,10 +12,13 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/sts"
+	"github.com/maaaaakoto35/PostUpAPI/interfaces/storage"
 )
 
 // StorageHandler struct
-type StorageHandler struct{}
+type StorageHandler struct {
+	Session *session.Session
+}
 
 // PresignURLLimitMin this variable is url limit.
 const PresignURLLimitMin = 15
@@ -23,11 +26,19 @@ const PresignURLLimitMin = 15
 // RandomStringLength this variable is length of random string.
 const RandomStringLength = 10
 
-// GetFederationToken this func is return token.
-func GetFederationToken(userID string) (result *sts.GetFederationTokenOutput, err error) {
-	svc := sts.New(session.Must(session.NewSessionWithOptions(session.Options{
+// NewStorageHandler this func is initializing MySQL db.
+func NewStorageHandler() storage.StorageHandler {
+	storageHandler := new(StorageHandler)
+	storageHandler.Session = session.Must(session.NewSessionWithOptions(session.Options{
 		SharedConfigState: session.SharedConfigEnable,
-	})))
+	}))
+
+	return storageHandler
+}
+
+// GetFederationToken this func is return token.
+func (handler *StorageHandler) GetFederationToken(userID string) (result *sts.GetFederationTokenOutput, err error) {
+	svc := sts.New(handler.Session)
 	policy := aws.String(getPolicy(userID))
 
 	input := &sts.GetFederationTokenInput{
@@ -79,10 +90,8 @@ func getPolicy(userID string) string {
 }
 
 // GetPresignedURL this func is to return pre-signed URL.
-func GetPresignedURL(userID string, num int) (url string, err error) {
-	svc := s3.New(session.Must(session.NewSessionWithOptions(session.Options{
-		SharedConfigState: session.SharedConfigEnable,
-	})))
+func (handler *StorageHandler) GetPresignedURL(userID string, num int) (url string, err error) {
+	svc := s3.New(handler.Session)
 
 	// request
 	fileHash, err := makeRandomStr(RandomStringLength)

@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/maaaaakoto35/PostUpAPI/domain"
 	"github.com/maaaaakoto35/PostUpAPI/interfaces/database"
@@ -20,7 +21,7 @@ type StorageController struct {
 }
 
 // NewPostController this func is initializing PostController.
-func NewPostController(sqlHandler database.SQLHandler) (db *PostController, storage *StorageController) {
+func NewPostController(sqlHandler database.SQLHandler, storageHandler storage.StorageHandler) (db *PostController, storage *StorageController) {
 	db = &PostController{
 		Interactor: usecase.PostInteractor{
 			PostRepository: &database.PostRepository{
@@ -28,7 +29,11 @@ func NewPostController(sqlHandler database.SQLHandler) (db *PostController, stor
 			},
 		},
 	}
-	storage = &StorageController{}
+
+	storage = &StorageController{
+		StorageController: storageHandler,
+	}
+
 	return
 }
 
@@ -47,8 +52,8 @@ func (controller *StorageController) GetFederation(c Context) (err error) {
 // GetPresignedURL this func is getting pre-sign url.
 func (controller *StorageController) GetPresignedURL(c Context) (err error) {
 	userID := jwtUserID(c)
-	temp := usecase.PostInteractor{}
-	num, err := temp.NumUserPost(userID)
+	temp := c.Param("num")
+	num, _ := strconv.Atoi(temp)
 	url, err := controller.StorageController.GetPresignedURL(userID, num)
 
 	if err != nil {

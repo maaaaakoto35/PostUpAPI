@@ -15,7 +15,7 @@ func Init() {
 	e := echo.New()
 
 	userController := controllers.NewUserController(NewMySQLDb())
-	postDB, postStorage := controllers.NewPostController(NewMySQLDb())
+	postDB, postStorage := controllers.NewPostController(NewMySQLDb(), NewStorageHandler())
 
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
