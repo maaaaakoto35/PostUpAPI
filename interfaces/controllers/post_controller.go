@@ -152,7 +152,6 @@ func (controller *PostController) GoodPost(c Context) (err error) {
 		Status string `json:"status"`
 	}{
 		Status: "success",
-	},
-	)
+	})
 	return
 }

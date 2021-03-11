@@ -26,7 +26,7 @@ const PresignURLLimitMin = 15
 // RandomStringLength this variable is length of random string.
 const RandomStringLength = 10
 
-// NewStorageHandler this func is initializing MySQL db.
+// NewStorageHandler this func is initializing AWS S3.
 func NewStorageHandler() storage.StorageHandler {
 	storageHandler := new(StorageHandler)
 	storageHandler.Session = session.Must(session.NewSessionWithOptions(session.Options{
