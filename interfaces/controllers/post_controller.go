@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/maaaaakoto35/PostUpAPI/domain"
 	"github.com/maaaaakoto35/PostUpAPI/interfaces/database"
@@ -52,8 +51,7 @@ func (controller *StorageController) GetFederation(c Context) (err error) {
 // GetPresignedURL this func is getting pre-sign url.
 func (controller *StorageController) GetPresignedURL(c Context) (err error) {
 	userID := jwtUserID(c)
-	temp := c.Param("num")
-	num, _ := strconv.Atoi(temp)
+	num := c.Get("num").(int)
 	url, err := controller.StorageController.GetPresignedURL(userID, num)
 
 	if err != nil {
@@ -94,6 +92,13 @@ func (controller *PostController) GetUserPost(c Context) (err error) {
 		return
 	}
 	c.JSON(http.StatusAccepted, post)
+	return
+}
+
+// GetUserPostNumImpl this func is getting only num.
+func (controller *PostController) GetUserPostNumImpl(c Context) (num int, err error) {
+	userID := jwtUserID(c)
+	num, err = controller.Interactor.NumUserPost(userID)
 	return
 }
 
