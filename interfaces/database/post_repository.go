@@ -16,11 +16,11 @@ func (pr *PostRepository) FindByID(id int) (post domain.Post, err error) {
 }
 
 // FindByUserID this func is finding post by post_id.
-func (pr *PostRepository) FindByUserID(userID string) (post domain.Post, err error) {
+func (pr *PostRepository) FindByUserID(userID string) (posts domain.Posts, err error) {
 	p := domain.Post{
 		UserID: userID,
 	}
-	if err = pr.Find(&post, p).Error; err != nil {
+	if err = pr.Find(&posts, p).Error; err != nil {
 		return
 	}
 	return

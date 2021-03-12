@@ -85,13 +85,13 @@ func (controller *PostController) CreatePost(c Context) (err error) {
 // GetUserPost this func is getting user posts.
 func (controller *PostController) GetUserPost(c Context) (err error) {
 	userID := c.Param("user_id")
-	post, err := controller.Interactor.PostByUserID(userID)
+	posts, err := controller.Interactor.PostsByUserID(userID)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, NewError(err))
 		return
 	}
-	c.JSON(http.StatusAccepted, post)
+	c.JSON(http.StatusAccepted, posts)
 	return
 }
 
