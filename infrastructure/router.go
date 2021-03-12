@@ -47,6 +47,7 @@ func Init() {
 		return postStorage.GetPresignedURL(r)
 	})
 	r.GET("/postup-num/:user_id", func(r echo.Context) error { return postDB.GetPostNum(r) })
+	r.GET("/get-post/:user_id", func(r echo.Context) error { return postDB.GetUserPost(r) })
 	r.POST("/postup", func(r echo.Context) error { return postDB.CreatePost(r) })
 	r.POST("/watch", func(r echo.Context) error { return postDB.WatchPost(r) })
 	r.POST("/good", func(r echo.Context) error { return postDB.GoodPost(r) })
