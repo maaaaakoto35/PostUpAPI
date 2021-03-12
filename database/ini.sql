@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 DROP TABLE IF EXISTS `posts`;
 CREATE TABLE IF NOT EXISTS `posts` (
   `id`          INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  `user_id`     VARCHAR(256) UNIQUE NOT NULL,
+  `user_id`     VARCHAR(256) NOT NULL,
   `file`        VARCHAR(256) NOT NULL,              ### ex) dir名/file名
   `introduce`   VARCHAR(90) NOT NULL DEFAULT "",    ### 30文字以内->30×3=90
   `good`        INT UNSIGNED NOT NULL DEFAULT 0,
