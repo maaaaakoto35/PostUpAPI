@@ -45,7 +45,7 @@ func (handler *SQLHandler) Find(out interface{}, where ...interface{}) *gorm.DB 
 
 // Count this func is a number of recordes.
 func (handler *SQLHandler) Count(out interface{}, where ...interface{}) (int, error) {
-	var count int
+	var count int = 0
 	if err := handler.Conn.Find(out, where...).Count(&count).Error; err != nil {
 		return -1, err
 	}
