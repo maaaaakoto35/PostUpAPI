@@ -15,6 +15,7 @@ func Init() {
 	e := echo.New()
 
 	userController := controllers.NewUserController(NewMySQLDb())
+	postDB, postStorage := controllers.NewPostController(NewMySQLDb(), NewStorageHandler())
 
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
@@ -29,10 +30,27 @@ func Init() {
 	config := setJwtConfig()
 	r.Use(middleware.JWTWithConfig(config))
 
+	// user
 	r.GET("/get-users", func(r echo.Context) error { return userController.GetUsers(r) })
 	r.GET("/get-user/:user_id", func(r echo.Context) error { return userController.GetUser(r) })
 	r.POST("/update-user/:user_id", func(r echo.Context) error { return userController.UpdateUser(r) })
 	r.DELETE("/delete-users/:id", func(r echo.Context) error { return userController.DeleteUser(r) })
+
+	// post
+	r.GET("/get-federation", func(r echo.Context) error { return postStorage.GetFederation(r) })
+	r.GET("/get-presign-url", func(r echo.Context) error {
+		num, err := postDB.GetUserPostNumImpl(r)
+		if err != nil {
+			r.JSON(500, err)
+		}
+		r.Set("num", num)
+		return postStorage.GetPresignedURL(r)
+	})
+	r.GET("/postup-num/:user_id", func(r echo.Context) error { return postDB.GetPostNum(r) })
+	r.GET("/get-post/:user_id", func(r echo.Context) error { return postDB.GetUserPost(r) })
+	r.POST("/postup", func(r echo.Context) error { return postDB.CreatePost(r) })
+	r.POST("/watch", func(r echo.Context) error { return postDB.WatchPost(r) })
+	r.POST("/good", func(r echo.Context) error { return postDB.GoodPost(r) })
 
 	e.Logger.Fatal(e.Start(":8080"))
 }

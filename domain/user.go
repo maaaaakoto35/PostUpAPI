@@ -4,9 +4,8 @@ import "time"
 
 // User this struct is user model.
 type User struct {
-	ID        int       `gorm:"primary_key" json:"id"`
-	UUID      string    `gorm:"column:uuid" json:"uuid"`
-	UserID    string    `gorm:"primaryKey;autoIncrement:false" json:"user_id"`
+	ID        int       `gorm:"primaryKey" json:"id"`
+	UserID    string    `gorm:"unique" json:"user_id"`
 	UserName  string    `json:"user_name"`
 	Img       string    `json:"user_img"`
 	Pass      string    `gorm:"column:password" json:"pass"`
