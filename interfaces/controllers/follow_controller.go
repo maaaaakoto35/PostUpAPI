@@ -3,6 +3,7 @@ package controllers
 import (
 	"net/http"
 
+	"github.com/maaaaakoto35/PostUpAPI/domain"
 	"github.com/maaaaakoto35/PostUpAPI/interfaces/database"
 	"github.com/maaaaakoto35/PostUpAPI/usecase"
 )
@@ -46,5 +47,19 @@ func (controller *FollowController) Following(c Context) (err error) {
 		return
 	}
 	c.JSON(http.StatusOK, follow)
+	return
+}
+
+// FollowedGetImpl this func is inisializing FollowController.
+func (controller *FollowController) FollowedGetImpl(c Context) (follower domain.ResUsers, err error) {
+	userID := jwtUserID(c)
+	follower, err = controller.Interactor.FollowedUserID(userID)
+	return
+}
+
+// FollowingGetImpl this func is inisializing FollowController.
+func (controller *FollowController) FollowingGetImpl(c Context) (follows domain.ResUsers, err error) {
+	userID := jwtUserID(c)
+	follows, err = controller.Interactor.FollowingUserID(userID)
 	return
 }

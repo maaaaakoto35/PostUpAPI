@@ -26,3 +26,27 @@ func BindFollowed(f Follow) ResUser {
 		UserID: f.FollowedUserID,
 	}
 }
+
+func BindFollowings(follows Follows) (newUsers ResUsers) {
+
+	for _, f := range follows {
+		follow := ResUser{
+			UserID: f.FollowingUserID,
+		}
+		newUsers = append(newUsers, follow)
+	}
+
+	return
+}
+
+func BindFolloweds(follows Follows) (newUsers ResUsers) {
+
+	for _, f := range follows {
+		follow := ResUser{
+			UserID: f.FollowingUserID,
+		}
+		newUsers = append(newUsers, follow)
+	}
+
+	return
+}

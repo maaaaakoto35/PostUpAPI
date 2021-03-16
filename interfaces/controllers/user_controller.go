@@ -124,9 +124,21 @@ func (controller *UserController) DeleteUser(c Context) (err error) {
 
 	err = controller.Interactor.DeleteByID(userID)
 	if err != nil {
-		c.JSON(500, NewError(err))
+		c.JSON(http.StatusInternalServerError, NewError(err))
 		return
 	}
 	c.JSON(http.StatusOK, nil)
+	return
+}
+
+// ResFollows this func is responce follows.
+func (controller *UserController) ResFollows(c Context) (newUsers domain.ResUsers, err error) {
+	follows := c.Get("follows").(domain.ResUsers)
+	resUsers, err := controller.Interactor.ResUsersByResUsers(follows)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, NewError(err))
+		return
+	}
+	c.JSON(http.StatusOK, resUsers)
 	return
 }

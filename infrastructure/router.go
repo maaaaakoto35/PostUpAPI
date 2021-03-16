@@ -2,6 +2,7 @@ package infrastructure
 
 import (
 	"io/ioutil"
+	"net/http"
 	"os"
 
 	"github.com/dgrijalva/jwt-go"
@@ -30,13 +31,29 @@ func Init() {
 	config := setJwtConfig()
 	r.Use(middleware.JWTWithConfig(config))
 
+	// user
 	r.GET("/get-users", func(r echo.Context) error { return userController.GetUsers(r) })
 	r.GET("/get-user/:user_id", func(r echo.Context) error { return userController.GetUser(r) })
 	r.POST("/update-user/:user_id", func(r echo.Context) error { return userController.UpdateUser(r) })
 	r.DELETE("/delete-users/:id", func(r echo.Context) error { return userController.DeleteUser(r) })
 
 	// follow
-	r.GET("/followed", func(r echo.Context) error { return followController.Followed(r) })
+	r.GET("/followed", func(r echo.Context) error {
+		follows, err := followController.FollowedGetImpl(r)
+		if err != nil {
+			r.JSON(http.StatusInternalServerError, err)
+		}
+		r.Set("follows", follows)
+		return userController.ResFollows(r)
+	})
+	r.GET("/following", func(r echo.Context) error {
+		follows, err := followController.FollowingGetImpl(r)
+		if err != nil {
+			r.JSON(http.StatusInternalServerError, err)
+		}
+		r.Set("follows", follows)
+		return userController.ResFollows(r)
+	})
 
 	e.Logger.Fatal(e.Start(":8080"))
 }

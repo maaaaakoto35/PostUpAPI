@@ -16,6 +16,15 @@ func (fr *FollowRepository) FindConditions(where ...interface{}) (follow domain.
 	return
 }
 
+//
+func (fr *FollowRepository) FindsConditions(where ...interface{}) (follows domain.Follows, err error) {
+
+	if err = fr.Find(&follows, where).Error; err != nil {
+		return
+	}
+	return
+}
+
 // Store this func is storing follow.
 func (fr *FollowRepository) Store(f domain.Follow) (follow domain.Follow, err error) {
 	if err = fr.Create(&f).Error; err != nil {

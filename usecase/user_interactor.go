@@ -34,6 +34,19 @@ func (interactor *UserInteractor) ResUserByUserID(userID string) (resUser domain
 	return
 }
 
+// ResUsersByUsers this func is to get full resusers.
+func (interactor *UserInteractor) ResUsersByResUsers(res domain.ResUsers) (resUsers domain.ResUsers, err error) {
+	for _, r := range res {
+		user, e := interactor.UserRepository.FindByUserID(r.UserID)
+		resUser := domain.BindUser(user)
+
+		resUsers = append(resUsers, resUser)
+		err = e
+	}
+
+	return
+}
+
 // ResUsers this func is from controller to repository.
 func (interactor *UserInteractor) ResUsers() (resUsers domain.ResUsers, err error) {
 	users, err := interactor.UserRepository.FindAll()
