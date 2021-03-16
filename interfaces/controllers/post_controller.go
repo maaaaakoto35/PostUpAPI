@@ -87,6 +87,7 @@ func (controller *PostController) GetUserPost(c Context) (err error) {
 	userID := c.Param("user_id")
 	posts, err := controller.Interactor.PostsByUserID(userID)
 
+	// comment
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, NewError(err))
 		return
