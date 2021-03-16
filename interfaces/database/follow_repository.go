@@ -16,10 +16,23 @@ func (fr *FollowRepository) FindConditions(where ...interface{}) (follow domain.
 	return
 }
 
-//
-func (fr *FollowRepository) FindsConditions(where ...interface{}) (follows domain.Follows, err error) {
+// FindsByFollowing this func is finding follows by following.
+func (fr *FollowRepository) FindsByFollowing(userID string) (follows domain.Follows, err error) {
+	f := domain.Follow{
+		FollowingUserID: userID,
+	}
+	if err = fr.Find(&follows, f).Error; err != nil {
+		return
+	}
+	return
+}
 
-	if err = fr.Find(&follows, where).Error; err != nil {
+// FindsByFollowed this func is finding follows by followed.
+func (fr *FollowRepository) FindsByFollowed(userID string) (follows domain.Follows, err error) {
+	f := domain.Follow{
+		FollowedUserID: userID,
+	}
+	if err = fr.Find(&follows, f).Error; err != nil {
 		return
 	}
 	return
