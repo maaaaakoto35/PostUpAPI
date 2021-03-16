@@ -11,14 +11,20 @@ type FollowInteractor struct {
 
 // FollowingUserID this func is from controller to repository.
 func (fi *FollowInteractor) FollowingUserID(userID string) (users domain.ResUsers, err error) {
-	follows, err := fi.FollowRepository.FindsConditions(map[string]interface{}{"following_user_id": userID})
+	f := domain.Follow{
+		FollowingUserID: userID,
+	}
+	follows, err := fi.FollowRepository.FindsConditions(f)
 	users = domain.BindFollowings(follows)
 	return
 }
 
 // FollowedUserID this func is from controller to repository.
 func (fi *FollowInteractor) FollowedUserID(userID string) (users domain.ResUsers, err error) {
-	follows, err := fi.FollowRepository.FindsConditions(map[string]interface{}{"followed_user_id": userID})
+	f := domain.Follow{
+		FollowedUserID: userID,
+	}
+	follows, err := fi.FollowRepository.FindsConditions(f)
 	users = domain.BindFolloweds(follows)
 	return
 }

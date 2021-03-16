@@ -34,7 +34,7 @@ func (interactor *UserInteractor) ResUserByUserID(userID string) (resUser domain
 	return
 }
 
-// ResUsersByUsers this func is to get full resusers.
+// ResUsersByResUsers this func is to get full resusers.
 func (interactor *UserInteractor) ResUsersByResUsers(res domain.ResUsers) (resUsers domain.ResUsers, err error) {
 	for _, r := range res {
 		user, e := interactor.UserRepository.FindByUserID(r.UserID)
