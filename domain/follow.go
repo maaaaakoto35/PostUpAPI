@@ -13,6 +13,11 @@ type Follow struct {
 // Follows this type is slice from Post struct.
 type Follows []Follow
 
+// TableName overrides the table name used by User to `profiles`
+func (Follow) TableName() string {
+	return "follows"
+}
+
 // BindFollowing this func is changing User into ResUser.
 func BindFollowing(f Follow) ResUser {
 	return ResUser{
@@ -27,6 +32,7 @@ func BindFollowed(f Follow) ResUser {
 	}
 }
 
+// BindFollowings func
 func BindFollowings(follows Follows) (newUsers ResUsers) {
 
 	for _, f := range follows {
@@ -39,6 +45,7 @@ func BindFollowings(follows Follows) (newUsers ResUsers) {
 	return
 }
 
+// BindFolloweds func
 func BindFolloweds(follows Follows) (newUsers ResUsers) {
 
 	for _, f := range follows {
