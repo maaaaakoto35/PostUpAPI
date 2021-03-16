@@ -132,7 +132,7 @@ func (controller *UserController) DeleteUser(c Context) (err error) {
 }
 
 // ResFollows this func is responce follows.
-func (controller *UserController) ResFollows(c Context) (newUsers domain.ResUsers, err error) {
+func (controller *UserController) ResFollows(c Context) (err error) {
 	follows := c.Get("follows").(domain.ResUsers)
 	resUsers, err := controller.Interactor.ResUsersByResUsers(follows)
 	if err != nil {
