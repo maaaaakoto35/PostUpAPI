@@ -42,11 +42,7 @@ func (fi *FollowInteractor) Update(f domain.Follow) (follow domain.Follow, err e
 }
 
 // Delete this func is from controller to repository.
-func (fi *FollowInteractor) Delete(followingUserID, followedUserID string) (err error) {
-	f := domain.Follow{
-		FollowingUserID: followingUserID,
-		FollowedUserID:  followedUserID,
-	}
+func (fi *FollowInteractor) Delete(f domain.Follow) (err error) {
 	follow, err := fi.FollowRepository.FindConditions(f)
 	err = fi.FollowRepository.DeleteByID(follow)
 	return

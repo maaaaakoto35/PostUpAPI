@@ -63,3 +63,29 @@ func (controller *FollowController) FollowingGetImpl(c Context) (follows domain.
 	follows, err = controller.Interactor.FollowingUserID(userID)
 	return
 }
+
+//
+func (controller *FollowController) Follow(c Context) (err error) {
+	f := domain.Follow{}
+	c.Bind(&f)
+	follow, err := controller.Interactor.Add(f)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, NewError(err))
+		return
+	}
+	c.JSON(http.StatusOK, follow)
+	return
+}
+
+//
+func (controller *FollowController) UnFollow(c Context) (err error) {
+	f := domain.Follow{}
+	c.Bind(&f)
+	err = controller.Interactor.Delete(f)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, NewError(err))
+		return
+	}
+	c.JSON(http.StatusOK, nil)
+	return
+}
