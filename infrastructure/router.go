@@ -15,6 +15,7 @@ func Init() {
 	e := echo.New()
 
 	userController := controllers.NewUserController(NewMySQLDb())
+	followController := controllers.NewFollowController(NewMySQLDb())
 
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
@@ -33,6 +34,9 @@ func Init() {
 	r.GET("/get-user/:user_id", func(r echo.Context) error { return userController.GetUser(r) })
 	r.POST("/update-user/:user_id", func(r echo.Context) error { return userController.UpdateUser(r) })
 	r.DELETE("/delete-users/:id", func(r echo.Context) error { return userController.DeleteUser(r) })
+
+	// follow
+	r.GET("/followed", func(r echo.Context) error { return followController.Followed(r) })
 
 	e.Logger.Fatal(e.Start(":8080"))
 }

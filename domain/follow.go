@@ -1,0 +1,28 @@
+package domain
+
+import "time"
+
+// Follow this struct is posts model.
+type Follow struct {
+	FollowingUserID string    `gorm:"column:following_user_id" json:"following_user_id"`
+	FollowedUserID  string    `gorm:"column:followed_user_id" json:"followed_user_id"`
+	CreatedAt       time.Time `json:"-"`
+	UpdatedAt       time.Time `json:"-"`
+}
+
+// Follows this type is slice from Post struct.
+type Follows []Follow
+
+// BindFollowing this func is changing User into ResUser.
+func BindFollowing(f Follow) ResUser {
+	return ResUser{
+		UserID: f.FollowingUserID,
+	}
+}
+
+// BindFollowed this func is changing User into ResUser.
+func BindFollowed(f Follow) ResUser {
+	return ResUser{
+		UserID: f.FollowedUserID,
+	}
+}
