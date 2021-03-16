@@ -4,6 +4,7 @@ import "time"
 
 // Follow this struct is posts model.
 type Follow struct {
+	ID              int       `gorm:"primary_key" json:"id"`
 	FollowingUserID string    `gorm:"column:following_user_id" json:"following_user_id"`
 	FollowedUserID  string    `gorm:"column:followed_user_id" json:"followed_user_id"`
 	CreatedAt       time.Time `json:"-"`
@@ -12,11 +13,6 @@ type Follow struct {
 
 // Follows this type is slice from Post struct.
 type Follows []Follow
-
-// TableName overrides the table name used by User to `profiles`
-func (Follow) TableName() string {
-	return "follows"
-}
 
 // BindFollowing this func is changing User into ResUser.
 func BindFollowing(f Follow) ResUser {
