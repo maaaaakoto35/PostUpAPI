@@ -15,6 +15,7 @@ import (
 func Init() {
 	e := echo.New()
 
+	// initialization.
 	userController := controllers.NewUserController(NewMySQLDb())
 <<<<<<< HEAD
 	postDB, postStorage := controllers.NewPostController(NewMySQLDb(), NewStorageHandler())
