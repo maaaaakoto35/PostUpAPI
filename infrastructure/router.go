@@ -17,11 +17,8 @@ func Init() {
 
 	// initialization.
 	userController := controllers.NewUserController(NewMySQLDb())
-<<<<<<< HEAD
 	postDB, postStorage := controllers.NewPostController(NewMySQLDb(), NewStorageHandler())
-=======
 	followController := controllers.NewFollowController(NewMySQLDb())
->>>>>>> feature/follow
 
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
