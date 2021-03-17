@@ -1,6 +1,11 @@
 package infrastructure
 
 import (
+	"io/ioutil"
+	"net/http"
+	"os"
+
+	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 	"github.com/maaaaakoto35/PostUpAPI/interfaces/controllers"
@@ -11,15 +16,62 @@ func Init() {
 	e := echo.New()
 
 	userController := controllers.NewUserController(NewMySQLDb())
+	followController := controllers.NewFollowController(NewMySQLDb())
 
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
+	e.Use(middleware.CORS())
 
-	e.GET("/users", func(c echo.Context) error { return userController.GetUsers(c) })
-	e.GET("/users/:id", func(c echo.Context) error { return userController.GetUser(c) })
+	// 認証なし
 	e.POST("/setup", func(c echo.Context) error { return userController.CreateUser(c) })
-	e.PUT("/users/:id", func(c echo.Context) error { return userController.UpdateUser(c) })
-	e.DELETE("/users/:id", func(c echo.Context) error { return userController.DeleteUser(c) })
+	e.POST("/login", func(c echo.Context) error { return userController.LogIn(c) })
 
+	// 認証あり
+	r := e.Group("/api")
+	config := setJwtConfig()
+	r.Use(middleware.JWTWithConfig(config))
+
+	// user
+	r.GET("/get-users", func(r echo.Context) error { return userController.GetUsers(r) })
+	r.GET("/get-user/:user_id", func(r echo.Context) error { return userController.GetUser(r) })
+	r.POST("/update-user/:user_id", func(r echo.Context) error { return userController.UpdateUser(r) })
+	r.DELETE("/delete-users/:id", func(r echo.Context) error { return userController.DeleteUser(r) })
+
+	// follow
+	r.GET("/followed", func(r echo.Context) error {
+		follows, err := followController.FollowedGetImpl(r)
+		if err != nil {
+			r.JSON(http.StatusInternalServerError, err)
+		}
+		r.Set("follows", follows)
+		return userController.ResFollows(r)
+	})
+	r.GET("/following", func(r echo.Context) error {
+		follows, err := followController.FollowingGetImpl(r)
+		if err != nil {
+			r.JSON(http.StatusInternalServerError, err)
+		}
+		r.Set("follows", follows)
+		return userController.ResFollows(r)
+	})
+	r.POST("/follow", func(r echo.Context) error { return followController.Follow(r) })
+	r.DELETE("/unfollow", func(r echo.Context) error { return followController.UnFollow(r) })
 	e.Logger.Fatal(e.Start(":8080"))
+}
+
+func setJwtConfig() middleware.JWTConfig {
+	// 公開鍵読み込み
+	pubPath := os.Getenv("PUBLIC_KEY_PATH")
+	pubKeyData, err := ioutil.ReadFile(pubPath)
+	if err != nil {
+		panic(err)
+	}
+	pubKey, err := jwt.ParseRSAPublicKeyFromPEM(pubKeyData)
+
+	return middleware.JWTConfig{
+		Claims:        &controllers.JwtCustomClaims{},
+		SigningKey:    pubKey,
+		ContextKey:    "jwt",
+		SigningMethod: "RS256",
+	}
 }
