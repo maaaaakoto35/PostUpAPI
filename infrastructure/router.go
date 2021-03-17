@@ -2,6 +2,7 @@ package infrastructure
 
 import (
 	"io/ioutil"
+	"net/http"
 	"os"
 
 	"github.com/dgrijalva/jwt-go"
@@ -15,7 +16,11 @@ func Init() {
 	e := echo.New()
 
 	userController := controllers.NewUserController(NewMySQLDb())
+<<<<<<< HEAD
 	postDB, postStorage := controllers.NewPostController(NewMySQLDb(), NewStorageHandler())
+=======
+	followController := controllers.NewFollowController(NewMySQLDb())
+>>>>>>> feature/follow
 
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
@@ -52,6 +57,25 @@ func Init() {
 	r.POST("/watch", func(r echo.Context) error { return postDB.WatchPost(r) })
 	r.POST("/good", func(r echo.Context) error { return postDB.GoodPost(r) })
 
+	// follow
+	r.GET("/followed", func(r echo.Context) error {
+		follows, err := followController.FollowedGetImpl(r)
+		if err != nil {
+			r.JSON(http.StatusInternalServerError, err)
+		}
+		r.Set("follows", follows)
+		return userController.ResFollows(r)
+	})
+	r.GET("/following", func(r echo.Context) error {
+		follows, err := followController.FollowingGetImpl(r)
+		if err != nil {
+			r.JSON(http.StatusInternalServerError, err)
+		}
+		r.Set("follows", follows)
+		return userController.ResFollows(r)
+	})
+	r.POST("/follow", func(r echo.Context) error { return followController.Follow(r) })
+	r.DELETE("/unfollow", func(r echo.Context) error { return followController.UnFollow(r) })
 	e.Logger.Fatal(e.Start(":8080"))
 }
 
