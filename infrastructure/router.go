@@ -75,6 +75,9 @@ func Init() {
 	r.POST("/follow", func(r echo.Context) error { return followController.Follow(r) })
 	r.DELETE("/unfollow", func(r echo.Context) error { return followController.UnFollow(r) })
 	e.Logger.Fatal(e.Start(":8080"))
+
+	// comment
+
 }
 
 func setJwtConfig() middleware.JWTConfig {
