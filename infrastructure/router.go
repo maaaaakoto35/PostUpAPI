@@ -38,6 +38,15 @@ func Init() {
 	r.GET("/get-user/:user_id", func(r echo.Context) error { return userController.GetUser(r) })
 	r.POST("/update-user/:user_id", func(r echo.Context) error { return userController.UpdateUser(r) })
 	r.DELETE("/delete-users/:id", func(r echo.Context) error { return userController.DeleteUser(r) })
+	r.GET("/my", func(r echo.Context) error {
+		following, follower, err := followController.FfNumImpl(r)
+		if err != nil {
+			r.JSON(500, err)
+		}
+		r.Set("following", following)
+		r.Set("follower", follower)
+		return userController.My(r)
+	})
 
 	// post
 	r.GET("/get-federation", func(r echo.Context) error { return postStorage.GetFederation(r) })

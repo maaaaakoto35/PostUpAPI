@@ -77,6 +77,23 @@ func (controller *UserController) LogIn(c Context) (err error) {
 	return
 }
 
+// GetUser this func is getting a user.
+func (controller *UserController) My(c Context) (err error) {
+	userID := jwtUserID(c)
+	user, err := controller.Interactor.ResUserByUserID(userID)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, NewError(err))
+		return
+	}
+
+	follower := c.Get("follower").(int)
+	following := c.Get("following").(int)
+	resUser := domain.BindFF(user, following, follower)
+	c.JSON(http.StatusOK, resUser)
+	return
+}
+
 // GetUsers this func is getting users.
 func (controller *UserController) GetUsers(c Context) (err error) {
 	users, err := controller.Interactor.ResUsers()

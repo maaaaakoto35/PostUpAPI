@@ -38,6 +38,15 @@ func (fr *FollowRepository) FindsByFollowed(userID string) (follows domain.Follo
 	return
 }
 
+// CountConditions this func is a number of post conditions.
+func (fr *FollowRepository) CountConditions(where ...interface{}) (count int, err error) {
+	count, err = fr.Count(&domain.Follow{}, where...)
+	if err != nil {
+		return 0, err
+	}
+	return
+}
+
 // Store this func is storing follow.
 func (fr *FollowRepository) Store(f domain.Follow) (follow domain.Follow, err error) {
 	if err = fr.Create(&f).Error; err != nil {
