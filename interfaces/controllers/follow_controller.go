@@ -24,6 +24,14 @@ func NewFollowController(sqlHandler database.SQLHandler) *FollowController {
 	}
 }
 
+// FFnumImpl this func is getting ff nums for impl.
+func (controller *FollowController) FfNumImpl(c Context) (following int, followed int, err error) {
+	userID := jwtUserID(c)
+	following, err = controller.Interactor.FollowingNum(userID)
+	followed, err = controller.Interactor.FollowedNum(userID)
+	return
+}
+
 // Followed this func is initializing FollowController.
 func (controller *FollowController) Followed(c Context) (err error) {
 	userID := jwtUserID(c)

@@ -16,10 +16,28 @@ func (fi *FollowInteractor) FollowingUserID(userID string) (users domain.ResUser
 	return
 }
 
+// FollowingNum this func is a number of user's post.
+func (fi *FollowInteractor) FollowingNum(userID string) (num int, err error) {
+	follow := domain.Follow{
+		FollowingUserID: userID,
+	}
+	num, err = fi.FollowRepository.CountConditions(follow)
+	return
+}
+
 // FollowedUserID this func is from controller to repository.
 func (fi *FollowInteractor) FollowedUserID(userID string) (users domain.ResUsers, err error) {
 	follows, err := fi.FollowRepository.FindsByFollowed(userID)
 	users = domain.BindFolloweds(follows)
+	return
+}
+
+// FollowingNum this func is a number of user's post.
+func (fi *FollowInteractor) FollowedNum(userID string) (num int, err error) {
+	follow := domain.Follow{
+		FollowedUserID: userID,
+	}
+	num, err = fi.FollowRepository.CountConditions(follow)
 	return
 }
 

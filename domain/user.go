@@ -18,9 +18,11 @@ type Users []User
 
 // ResUser this struct is for response user data.
 type ResUser struct {
-	UserID   string `json:"user_id"`
-	UserName string `json:"user_name"`
-	Img      string `json:"user_img"`
+	UserID    string `json:"user_id"`
+	UserName  string `json:"user_name"`
+	Img       string `json:"user_img"`
+	Follower  int    `json:"follower"`
+	Following int    `json:"following"`
 }
 
 // ResUsers this type is slice from ResUser struct.
@@ -50,4 +52,14 @@ func BindUsers(users Users) ResUsers {
 	}
 
 	return newUsers
+}
+
+func BindFF(resUser ResUser, following int, follower int) ResUser {
+	return ResUser{
+		UserID:    resUser.UserID,
+		UserName:  resUser.UserName,
+		Img:       resUser.Img,
+		Following: following,
+		Follower:  follower,
+	}
 }
