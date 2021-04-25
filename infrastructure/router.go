@@ -2,7 +2,6 @@ package infrastructure
 
 import (
 	"io/ioutil"
-	"net/http"
 	"os"
 
 	"github.com/dgrijalva/jwt-go"
@@ -39,10 +38,7 @@ func Init() {
 	r.POST("/update-user/:user_id", func(r echo.Context) error { return userController.UpdateUser(r) })
 	r.DELETE("/delete-users/:id", func(r echo.Context) error { return userController.DeleteUser(r) })
 	r.GET("/my", func(r echo.Context) error {
-		following, follower, err := followController.FfNumImpl(r)
-		if err != nil {
-			r.JSON(500, err)
-		}
+		following, follower, _ := followController.FfNumImpl(r)
 		r.Set("following", following)
 		r.Set("follower", follower)
 		return userController.My(r)
@@ -51,10 +47,7 @@ func Init() {
 	// post
 	r.GET("/get-federation", func(r echo.Context) error { return postStorage.GetFederation(r) })
 	r.GET("/get-presign-url", func(r echo.Context) error {
-		num, err := postDB.GetUserPostNumImpl(r)
-		if err != nil {
-			r.JSON(500, err)
-		}
+		num, _ := postDB.GetUserPostNumImpl(r)
 		r.Set("num", num)
 		return postStorage.GetPresignedURL(r)
 	})
@@ -66,18 +59,12 @@ func Init() {
 
 	// follow
 	r.GET("/followed", func(r echo.Context) error {
-		follows, err := followController.FollowedGetImpl(r)
-		if err != nil {
-			r.JSON(http.StatusInternalServerError, err)
-		}
+		follows, _ := followController.FollowedGetImpl(r)
 		r.Set("follows", follows)
 		return userController.ResFollows(r)
 	})
 	r.GET("/following", func(r echo.Context) error {
-		follows, err := followController.FollowingGetImpl(r)
-		if err != nil {
-			r.JSON(http.StatusInternalServerError, err)
-		}
+		follows, _ := followController.FollowingGetImpl(r)
 		r.Set("follows", follows)
 		return userController.ResFollows(r)
 	})

@@ -28,13 +28,7 @@ func NewFollowController(sqlHandler database.SQLHandler) *FollowController {
 func (controller *FollowController) FfNumImpl(c Context) (following int, followed int, err error) {
 	userID := jwtUserID(c)
 	following, err = controller.Interactor.FollowingNum(userID)
-	if err != nil {
-		return 0, 0, err
-	}
 	followed, err = controller.Interactor.FollowedNum(userID)
-	if err != nil {
-		return 0, 0, err
-	}
 	return
 }
 
