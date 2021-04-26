@@ -18,6 +18,7 @@ func Init() {
 	userController := controllers.NewUserController(NewMySQLDb())
 	postDB, postStorage := controllers.NewPostController(NewMySQLDb(), NewStorageHandler())
 	followController := controllers.NewFollowController(NewMySQLDb())
+	commentController := controllers.NewUserController(NewMySQLDb())
 
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
@@ -71,6 +72,13 @@ func Init() {
 	r.POST("/follow", func(r echo.Context) error { return followController.Follow(r) })
 	r.DELETE("/unfollow", func(r echo.Context) error { return followController.UnFollow(r) })
 	e.Logger.Fatal(e.Start(":8080"))
+
+	// comment
+	r.POST("/comments", func(r echo.Context) error { return commentController.CreateComment(r) })
+	r.DELETE("/delete-comments", func(r echo.Context) error { return commentController.DeleteComment(r) })
+	r.PUT("/edit-comments", func(r echo.Context) error { return commentController.Edit(r) })
+	r.POST("/good", func(r echo.Context) error { return commentController.GoodComment(r) })
+
 }
 
 func setJwtConfig() middleware.JWTConfig {

@@ -2,7 +2,7 @@ package domain
 
 import "time"
 
-// Follow this struct is posts model.
+// Follow this struct is follows model.
 type Follow struct {
 	ID              int       `gorm:"primary_key" json:"id"`
 	FollowingUserID string    `gorm:"column:following_user_id" json:"following_user_id"`
@@ -11,7 +11,7 @@ type Follow struct {
 	UpdatedAt       time.Time `json:"-"`
 }
 
-// Follows this type is slice from Post struct.
+// Follows this type is slice from Follow struct.
 type Follows []Follow
 
 // BindFollowing this func is changing User into ResUser.
