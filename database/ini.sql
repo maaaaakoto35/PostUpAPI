@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `user_id`     VARCHAR(256) UNIQUE NOT NULL,
   `user_name`   VARCHAR(256) NOT NULL,
   `img`         VARCHAR(256) NULL,
+  `introduce`   VARCHAR(256) NULL DEFAULT "",
   `password`    VARCHAR(256) NOT NULL,
   `created_at`  TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updated_at`  TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -19,7 +20,9 @@ CREATE TABLE IF NOT EXISTS `posts` (
   `file`        VARCHAR(256) NOT NULL,              ### ex) dir名/file名
   `introduce`   VARCHAR(90) NOT NULL DEFAULT "",    ### 30文字以内->30×3=90
   `good`        INT UNSIGNED NOT NULL DEFAULT 0,
-  `watch`       INT UNSIGNED NOT NULL DEFAULT 0,
+  `watch`       INT UNSIGNED NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 DROP TABLE IF EXISTS `follows`;
 CREATE TABLE IF NOT EXISTS `follows` (
   `id`                   INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
