@@ -8,6 +8,7 @@ type User struct {
 	UserID    string    `gorm:"unique" json:"user_id"`
 	UserName  string    `json:"user_name"`
 	Img       string    `json:"user_img"`
+	Introduce string    `json:"introduce"`
 	Pass      string    `gorm:"column:password" json:"pass"`
 	CreatedAt time.Time `json:"-"`
 	UpdatedAt time.Time `json:"-"`
@@ -21,6 +22,7 @@ type ResUser struct {
 	UserID    string `json:"user_id"`
 	UserName  string `json:"user_name"`
 	Img       string `json:"user_img"`
+	Introduce string `json:"introduce"`
 	Follower  int    `json:"follower"`
 	Following int    `json:"following"`
 }
@@ -31,9 +33,10 @@ type ResUsers []ResUser
 // BindUser this func is changing User into ResUser.
 func BindUser(u User) ResUser {
 	return ResUser{
-		UserID:   u.UserID,
-		UserName: u.UserName,
-		Img:      u.Img,
+		UserID:    u.UserID,
+		UserName:  u.UserName,
+		Img:       u.Img,
+		Introduce: u.Introduce,
 	}
 }
 
@@ -43,9 +46,10 @@ func BindUsers(users Users) ResUsers {
 
 	for _, u := range users {
 		user := ResUser{
-			UserID:   u.UserID,
-			UserName: u.UserName,
-			Img:      u.Img,
+			UserID:    u.UserID,
+			UserName:  u.UserName,
+			Img:       u.Img,
+			Introduce: u.Introduce,
 		}
 
 		newUsers = append(newUsers, user)
@@ -59,6 +63,7 @@ func BindFF(resUser ResUser, following int, follower int) ResUser {
 		UserID:    resUser.UserID,
 		UserName:  resUser.UserName,
 		Img:       resUser.Img,
+		Introduce: resUser.Introduce,
 		Following: following,
 		Follower:  follower,
 	}
