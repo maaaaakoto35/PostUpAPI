@@ -103,6 +103,15 @@ func (controller *PostController) GetUserPostNumImpl(c Context) (num int, err er
 	return
 }
 
+// GetUserPostNumImpl this func is getting only num.
+func (controller *PostController) GetPostsImpl(c Context, userID string) (short domain.Posts, long domain.Posts, err error) {
+	if userID == "" {
+		userID = jwtUserID(c)
+	}
+	short, long, err = controller.Interactor.PostsByTypeUserID(userID)
+	return
+}
+
 // GetPostNum this func is getting post upping num.
 func (controller *PostController) GetPostNum(c Context) (err error) {
 	userID := c.Param("user_id")

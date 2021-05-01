@@ -11,8 +11,9 @@ INSERT INTO `users`
 
 TRUNCATE TABLE`posts`;
 INSERT INTO `posts`
-(`user_id`, `file`, `introduce`) VALUES
-("maaaaakoto", "sample/sample.mp3", "introduce, introduce, introduce");
+(`user_id`, `file`, `introduce`, `type`) VALUES
+("maaaaakoto", "sample/sample01.mp3", "introduce, introduce, introduce", "short"),
+("maaaaakoto", "sample/sample02.mp3", "introduce, introduce, introduce", "long");
 
 TRUNCATE TABLE `follows`;
 INSERT INTO `follows`

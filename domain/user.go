@@ -25,10 +25,20 @@ type ResUser struct {
 	Introduce string `json:"introduce"`
 	Follower  int    `json:"follower"`
 	Following int    `json:"following"`
+	Short     Posts  `json:"short"`
+	Long      Posts  `json:"long"`
 }
 
 // ResUsers this type is slice from ResUser struct.
 type ResUsers []ResUser
+
+type BindParam struct {
+	ResUser   ResUser
+	Following int
+	Follower  int
+	Short     *Posts
+	Long      *Posts
+}
 
 // BindUser this func is changing User into ResUser.
 func BindUser(u User) ResUser {
@@ -58,13 +68,25 @@ func BindUsers(users Users) ResUsers {
 	return newUsers
 }
 
-func BindFF(resUser ResUser, following int, follower int) ResUser {
+func Bind(param BindParam) ResUser {
+	if param.Short == nil {
+		param.Short = &Posts{
+			Post{},
+		}
+	}
+	if param.Long == nil {
+		param.Long = &Posts{
+			Post{},
+		}
+	}
 	return ResUser{
-		UserID:    resUser.UserID,
-		UserName:  resUser.UserName,
-		Img:       resUser.Img,
-		Introduce: resUser.Introduce,
-		Following: following,
-		Follower:  follower,
+		UserID:    param.ResUser.UserID,
+		UserName:  param.ResUser.UserName,
+		Img:       param.ResUser.Img,
+		Introduce: param.ResUser.Introduce,
+		Following: param.Following,
+		Follower:  param.Follower,
+		Short:     *param.Short,
+		Long:      *param.Long,
 	}
 }

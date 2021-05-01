@@ -34,6 +34,14 @@ func (pr *PostRepository) FindConditions(where ...interface{}) (post domain.Post
 	return
 }
 
+// FindConditions this func is finding post by some conditions.
+func (pr *PostRepository) FindsConditions(where ...interface{}) (posts domain.Posts, err error) {
+	if err = pr.Find(&posts, where...).Error; err != nil {
+		return
+	}
+	return
+}
+
 // CountConditions this func is a number of post conditions.
 func (pr *PostRepository) CountConditions(where ...interface{}) (count int, err error) {
 	count, err = pr.Count(&domain.Post{}, where...)

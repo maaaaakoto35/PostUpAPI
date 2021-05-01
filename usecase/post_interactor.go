@@ -19,6 +19,21 @@ func (pi *PostInteractor) PostsByUserID(userID string) (posts domain.Posts, err 
 	return
 }
 
+// PostsByTypeUserID this func is from controller to repository.
+func (pi *PostInteractor) PostsByTypeUserID(userID string) (short domain.Posts, long domain.Posts, err error) {
+	s := domain.Post{
+		UserID: userID,
+		Type:   domain.TYPE_SHORT,
+	}
+	l := domain.Post{
+		UserID: userID,
+		Type:   domain.TYPE_LONG,
+	}
+	short, err = pi.PostRepository.FindsConditions(s)
+	long, err = pi.PostRepository.FindsConditions(l)
+	return
+}
+
 // NumUserPost this func is a number of user's post.
 func (pi *PostInteractor) NumUserPost(userID string) (num int, err error) {
 	post := domain.Post{
