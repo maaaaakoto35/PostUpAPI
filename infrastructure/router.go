@@ -34,14 +34,26 @@ func Init() {
 
 	// user
 	r.GET("/get-users", func(r echo.Context) error { return userController.GetUsers(r) })
-	r.GET("/get-user/:user_id", func(r echo.Context) error { return userController.GetUser(r) })
 	r.POST("/update-user/:user_id", func(r echo.Context) error { return userController.UpdateUser(r) })
 	r.DELETE("/delete-users/:id", func(r echo.Context) error { return userController.DeleteUser(r) })
 	r.GET("/my", func(r echo.Context) error {
-		following, follower, _ := followController.FfNumImpl(r)
+		following, follower, _ := followController.FfNumImpl(r, "")
 		r.Set("following", following)
 		r.Set("follower", follower)
-		return userController.My(r)
+		short, long, _ := postDB.GetPostsImpl(r, "")
+		r.Set("short", &short)
+		r.Set("long", &long)
+		return userController.GetInfo(r, "")
+	})
+	r.GET("/get-user/:user_id", func(r echo.Context) error {
+		userID := r.Param("user_id")
+		following, follower, _ := followController.FfNumImpl(r, userID)
+		r.Set("following", following)
+		r.Set("follower", follower)
+		short, long, _ := postDB.GetPostsImpl(r, userID)
+		r.Set("short", &short)
+		r.Set("long", &long)
+		return userController.GetInfo(r, userID)
 	})
 
 	// post

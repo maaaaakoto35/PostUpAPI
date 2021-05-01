@@ -19,8 +19,11 @@ CREATE TABLE IF NOT EXISTS `posts` (
   `user_id`     VARCHAR(256) NOT NULL,
   `file`        VARCHAR(256) NOT NULL,              ### ex) dir名/file名
   `introduce`   VARCHAR(90) NOT NULL DEFAULT "",    ### 30文字以内->30×3=90
+  `type`        ENUM('short', 'long'),
   `good`        INT UNSIGNED NOT NULL DEFAULT 0,
-  `watch`       INT UNSIGNED NOT NULL DEFAULT 0
+  `watch`       INT UNSIGNED NOT NULL DEFAULT 0,
+  `created_at`  TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `updated_at`  TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `follows`;
