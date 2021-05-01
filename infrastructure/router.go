@@ -1,6 +1,10 @@
 package infrastructure
 
 import (
+	"io/ioutil"
+	"os"
+
+	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 	"github.com/maaaaakoto35/PostUpAPI/interfaces/controllers"
@@ -17,9 +21,9 @@ func Init() {
 
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
+	e.Use(middleware.CORS())
 
-	e.GET("/users", func(c echo.Context) error { return userController.GetUsers(c) })
-	e.GET("/users/:id", func(c echo.Context) error { return userController.GetUser(c) })
+	// 認証なし
 	e.POST("/setup", func(c echo.Context) error { return userController.CreateUser(c) })
 	e.POST("/login", func(c echo.Context) error { return userController.LogIn(c) })
 
@@ -79,4 +83,21 @@ func Init() {
 	r.POST("/follow", func(r echo.Context) error { return followController.Follow(r) })
 	r.DELETE("/unfollow", func(r echo.Context) error { return followController.UnFollow(r) })
 	e.Logger.Fatal(e.Start(":8080"))
+}
+
+func setJwtConfig() middleware.JWTConfig {
+	// 公開鍵読み込み
+	pubPath := os.Getenv("PUBLIC_KEY_PATH")
+	pubKeyData, err := ioutil.ReadFile(pubPath)
+	if err != nil {
+		panic(err)
+	}
+	pubKey, err := jwt.ParseRSAPublicKeyFromPEM(pubKeyData)
+
+	return middleware.JWTConfig{
+		Claims:        &controllers.JwtCustomClaims{},
+		SigningKey:    pubKey,
+		ContextKey:    "jwt",
+		SigningMethod: "RS256",
+	}
 }

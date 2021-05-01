@@ -8,5 +8,6 @@ type SQLHandler interface {
 	Count(interface{}, ...interface{}) (int, error)
 	Create(interface{}) *gorm.DB
 	Save(interface{}) *gorm.DB
+	SaveValue(interface{}, string, string) *gorm.DB
 	Delete(interface{}) *gorm.DB
 }

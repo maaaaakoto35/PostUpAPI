@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/maaaaakoto35/PostUpAPI/domain"
 	"github.com/maaaaakoto35/PostUpAPI/interfaces/database"
@@ -12,6 +11,12 @@ import (
 // UserController this struct is recieving Interactor interface.
 type UserController struct {
 	Interactor usecase.UserInteractor
+}
+
+// UpdateValue this struct is recieving posting data.
+type UpdateValue struct {
+	Column string `json:"column"`
+	Data   string `json:"data"`
 }
 
 // NewUserController this func is initializing UserController.
@@ -120,8 +125,8 @@ func (controller *UserController) GetUsers(c Context) (err error) {
 
 // GetUser this func is getting a user.
 func (controller *UserController) GetUser(c Context) (err error) {
-	id, _ := strconv.Atoi(c.Param("id"))
-	user, err := controller.Interactor.ResUserByID(id)
+	userID := c.Param("user_id")
+	user, err := controller.Interactor.ResUserByUserID(userID)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, NewError(err))
@@ -133,11 +138,11 @@ func (controller *UserController) GetUser(c Context) (err error) {
 
 // UpdateUser this func is updating user.
 func (controller *UserController) UpdateUser(c Context) (err error) {
-	id, _ := strconv.Atoi(c.Param("id"))
-	u := domain.User{ID: id}
-	c.Bind(&u)
+	userID := jwtUserID(c)
+	updateValue := new(UpdateValue)
+	c.Bind(updateValue)
 
-	user, err := controller.Interactor.Update(u)
+	user, err := controller.Interactor.UpdateValue(userID, updateValue.Column, updateValue.Data)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, NewError(err))
@@ -149,14 +154,25 @@ func (controller *UserController) UpdateUser(c Context) (err error) {
 
 // DeleteUser this func is deleting user.
 func (controller *UserController) DeleteUser(c Context) (err error) {
-	id, _ := strconv.Atoi(c.Param("id"))
-	user := domain.User{ID: id}
+	userID := jwtUserID(c)
 
-	err = controller.Interactor.DeleteByID(user)
+	err = controller.Interactor.DeleteByID(userID)
 	if err != nil {
-		c.JSON(500, NewError(err))
+		c.JSON(http.StatusInternalServerError, NewError(err))
 		return
 	}
 	c.JSON(http.StatusOK, nil)
+	return
+}
+
+// ResFollows this func is responce follows.
+func (controller *UserController) ResFollows(c Context) (err error) {
+	follows := c.Get("follows").(domain.ResUsers)
+	resUsers, err := controller.Interactor.ResUsersByResUsers(follows)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, NewError(err))
+		return
+	}
+	c.JSON(http.StatusOK, resUsers)
 	return
 }
