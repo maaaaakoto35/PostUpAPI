@@ -39,6 +39,73 @@ func (controller *UserController) CreateUser(c Context) (err error) {
 	return
 }
 
+// LogIn this func is logging in.
+func (controller *UserController) LogIn(c Context) (err error) {
+	u := domain.User{}
+	c.Bind(&u)
+
+	// varidattion
+	if u.UserID == "" || u.Pass == "" {
+		c.JSON(http.StatusInternalServerError, "dose not match args")
+		return
+	}
+
+	result, err := controller.Interactor.CanLogin(u.UserID, u.Pass)
+	if err != nil || result != true {
+		c.JSON(http.StatusNonAuthoritativeInfo, NewError(err))
+		return
+	}
+
+	// set custom claims
+	token, err := setJwt(u.UserID, u.UserName)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, NewError(err))
+		return
+	}
+	c.JSON(http.StatusAccepted, struct {
+		Status string `json:"status"`
+		Token  string `json:"token"`
+	}{
+		Status: "success",
+		Token:  token,
+	})
+	return
+}
+
+// GetInfo this func is getting a user.
+func (controller *UserController) GetInfo(c Context, userID string) (err error) {
+	if userID == "" {
+		userID = jwtUserID(c)
+	}
+	user, err := controller.Interactor.ResUserByUserID(userID)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, NewError(err))
+		return
+	}
+
+	follower := c.Get("follower").(int)
+	following := c.Get("following").(int)
+	short, ok := c.Get("short").(*domain.Posts)
+	if !ok {
+		short = nil
+	}
+	long, ok := c.Get("long").(*domain.Posts)
+	if !ok {
+		long = nil
+	}
+	param := domain.BindParam{
+		ResUser:   user,
+		Following: following,
+		Follower:  follower,
+		Short:     short,
+		Long:      long,
+	}
+	resUser := domain.Bind(param)
+	c.JSON(http.StatusOK, resUser)
+	return
+}
+
 // GetUsers this func is getting users.
 func (controller *UserController) GetUsers(c Context) (err error) {
 	users, err := controller.Interactor.ResUsers()
