@@ -53,11 +53,6 @@ func (handler *SQLHandler) Save(value interface{}) *gorm.DB {
 	return handler.Conn.Save(value)
 }
 
-// SaveValue this func is updating some columns.
-func (handler *SQLHandler) SaveValue(in interface{}, set string, value string) *gorm.DB {
-	return handler.Conn.Model(in).Update(set, value)
-}
-
 // Delete this func is deleting a row.
 func (handler *SQLHandler) Delete(value interface{}) *gorm.DB {
 	return handler.Conn.Delete(value)
