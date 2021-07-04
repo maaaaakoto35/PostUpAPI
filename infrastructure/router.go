@@ -2,9 +2,11 @@ package infrastructure
 
 import (
 	"io/ioutil"
+	"log"
 	"os"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/joho/godotenv"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 	"github.com/maaaaakoto35/PostUpAPI/interfaces/controllers"
@@ -13,6 +15,7 @@ import (
 // Init this func is initializing server.
 func Init() {
 	e := echo.New()
+	envLoad()
 
 	// initialization.
 	userController := controllers.NewUserController(NewMySQLDb())
@@ -99,5 +102,12 @@ func setJwtConfig() middleware.JWTConfig {
 		SigningKey:    pubKey,
 		ContextKey:    "jwt",
 		SigningMethod: "RS256",
+	}
+}
+
+func envLoad() {
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Fatal("Error loading .env file")
 	}
 }
