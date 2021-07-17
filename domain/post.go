@@ -9,6 +9,7 @@ const TYPE_LONG string = "long"
 type Post struct {
 	ID        int       `gorm:"primaryKey" json:"id"`
 	UserID    string    `json:"user_id"`
+	UserName  string    `gorm:"-" json:"user_name"`
 	File      string    `json:"file"`
 	Introduce string    `json:"introduce"`
 	Type      string    `json:"type"`

@@ -1,6 +1,10 @@
 package usecase
 
-import "github.com/maaaaakoto35/PostUpAPI/domain"
+import (
+	"sort"
+
+	"github.com/maaaaakoto35/PostUpAPI/domain"
+)
 
 // PostInteractor this struct has PostRepository.
 type PostInteractor struct {
@@ -16,6 +20,19 @@ func (pi *PostInteractor) PostByID(id int) (post domain.Post, err error) {
 // PostsByUserID this func is from controller to repository.
 func (pi *PostInteractor) PostsByUserID(userID string) (posts domain.Posts, err error) {
 	posts, err = pi.PostRepository.FindByUserID(userID)
+	return
+}
+
+// PostsByUserID this func is from controller to repository.
+func (pi *PostInteractor) PostsByUserIDs(users domain.ResUsers, postType string) (posts domain.Posts, err error) {
+	var userIDs []string
+	t := domain.Post{
+		Type: postType,
+	}
+	posts, err = pi.PostRepository.FindsConditions(t, "user_id IN ?", userIDs)
+	sort.Slice(posts, func(i, j int) bool {
+		return posts[i].CreatedAt.After(posts[j].CreatedAt)
+	})
 	return
 }
 

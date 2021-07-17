@@ -112,6 +112,17 @@ func (controller *PostController) GetPostsImpl(c Context, userID string) (short 
 	return
 }
 
+// GetShort this func is getting short for home.
+func (controller *PostController) GetPostsFollowing(c Context, following domain.ResUsers, postType string) (err error) {
+	posts, err := controller.Interactor.PostsByUserIDs(following, postType)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, NewError(err))
+		return
+	}
+	c.JSON(http.StatusAccepted, posts)
+	return
+}
+
 // GetPostNum this func is getting post upping num.
 func (controller *PostController) GetPostNum(c Context) (err error) {
 	userID := c.Param("user_id")
