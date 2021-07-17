@@ -26,10 +26,14 @@ func (pi *PostInteractor) PostsByUserID(userID string) (posts domain.Posts, err 
 // PostsByUserID this func is from controller to repository.
 func (pi *PostInteractor) PostsByUserIDs(users domain.ResUsers, postType string) (posts domain.Posts, err error) {
 	var userIDs []string
-	t := domain.Post{
-		Type: postType,
+	for _, u := range users {
+		userIDs = append(userIDs, u.UserID)
 	}
-	posts, err = pi.PostRepository.FindsConditions(t, "user_id IN ?", userIDs)
+	posts, err = pi.PostRepository.FindsConditions(
+		"type = ? AND user_id IN (?)",
+		postType,
+		userIDs,
+	)
 	sort.Slice(posts, func(i, j int) bool {
 		return posts[i].CreatedAt.After(posts[j].CreatedAt)
 	})
