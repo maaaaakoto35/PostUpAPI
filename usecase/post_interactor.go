@@ -30,7 +30,7 @@ func (pi *PostInteractor) PostsByUserIDs(users domain.ResUsers, postType string)
 		userIDs = append(userIDs, u.UserID)
 	}
 	posts, err = pi.PostRepository.FindsConditions(
-		"type = ? AND user_id IN (?)",
+		"`type` = ? AND `user_id` IN (?)",
 		postType,
 		userIDs,
 	)
