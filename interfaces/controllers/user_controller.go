@@ -136,6 +136,12 @@ func (controller *UserController) GetUser(c Context) (err error) {
 	return
 }
 
+// GetUserImpl this func is getting a user.
+func (controller *UserController) GetUserImpl(userID string) (user domain.ResUser, err error) {
+	user, err = controller.Interactor.ResUserByUserID(userID)
+	return
+}
+
 // UpdateUser this func is updating user.
 func (controller *UserController) UpdateUser(c Context) (err error) {
 	userID := jwtUserID(c)

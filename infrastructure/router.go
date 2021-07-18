@@ -71,6 +71,14 @@ func Init() {
 	r.POST("/postup", func(r echo.Context) error { return postDB.CreatePost(r) })
 	r.POST("/watch", func(r echo.Context) error { return postDB.WatchPost(r) })
 	r.POST("/good", func(r echo.Context) error { return postDB.GoodPost(r) })
+	r.GET("/get-short", func(r echo.Context) error {
+		following, _ := followController.FollowingGetImpl(r)
+		return postDB.GetPostsFollowing(r, following, "short")
+	})
+	r.GET("/get-long", func(r echo.Context) error {
+		following, _ := followController.FollowingGetImpl(r)
+		return postDB.GetPostsFollowing(r, following, "long")
+	})
 
 	// follow
 	r.GET("/followed", func(r echo.Context) error {
