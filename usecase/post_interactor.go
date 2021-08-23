@@ -1,8 +1,6 @@
 package usecase
 
 import (
-	"sort"
-
 	"github.com/maaaaakoto35/PostUpAPI/domain"
 )
 
@@ -26,17 +24,23 @@ func (pi *PostInteractor) PostsByUserID(userID string) (posts domain.Posts, err 
 // PostsByUserID this func is from controller to repository.
 func (pi *PostInteractor) PostsByUserIDs(users domain.ResUsers, postType string) (posts domain.Posts, err error) {
 	var userIDs []string
-	for _, u := range users {
-		userIDs = append(userIDs, u.UserID)
+	if len(users) > 0 {
+		for _, u := range users {
+			userIDs = append(userIDs, u.UserID)
+		}
+		posts, err = pi.PostRepository.FindsConditionsOrder(
+			"`created_at` DESC",
+			"`type` = ? AND `user_id` IN (?)",
+			postType,
+			userIDs,
+		)
+	} else {
+		posts, err = pi.PostRepository.FindsConditionsOrder(
+			"`watch` DESC, `created_at` DESC",
+			"`type` = ?",
+			postType,
+		)
 	}
-	posts, err = pi.PostRepository.FindsConditions(
-		"`type` = ? AND `user_id` IN (?)",
-		postType,
-		userIDs,
-	)
-	sort.Slice(posts, func(i, j int) bool {
-		return posts[i].CreatedAt.After(posts[j].CreatedAt)
-	})
 	return
 }
 

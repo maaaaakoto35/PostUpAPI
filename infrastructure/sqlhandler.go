@@ -71,3 +71,8 @@ func (handler *SQLHandler) SaveValue(in interface{}, set string, value string) *
 func (handler *SQLHandler) Delete(value interface{}) *gorm.DB {
 	return handler.Conn.Delete(value)
 }
+
+// Delete this func is deleting a row.
+func (handler *SQLHandler) Order(order string) *gorm.DB {
+	return handler.Conn.Order(order)
+}

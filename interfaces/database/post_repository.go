@@ -34,9 +34,17 @@ func (pr *PostRepository) FindConditions(where ...interface{}) (post domain.Post
 	return
 }
 
-// FindConditions this func is finding post by some conditions.
+// FindsConditions this func is finding post by some conditions.
 func (pr *PostRepository) FindsConditions(where ...interface{}) (posts domain.Posts, err error) {
 	if err = pr.Find(&posts, where...).Error; err != nil {
+		return
+	}
+	return
+}
+
+// FindsConditions this func is finding post by some conditions.
+func (pr *PostRepository) FindsConditionsOrder(order string, where ...interface{}) (posts domain.Posts, err error) {
+	if err = pr.Order(order).Find(&posts, where...).Error; err != nil {
 		return
 	}
 	return

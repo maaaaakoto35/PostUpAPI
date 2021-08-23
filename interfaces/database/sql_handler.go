@@ -10,4 +10,5 @@ type SQLHandler interface {
 	Save(interface{}) *gorm.DB
 	SaveValue(interface{}, string, string) *gorm.DB
 	Delete(interface{}) *gorm.DB
+	Order(string) *gorm.DB
 }
