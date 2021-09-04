@@ -22,9 +22,9 @@ func (pi *PostInteractor) PostsByUserID(userID string) (posts domain.Posts, err 
 }
 
 // PostsByUserID this func is from controller to repository.
-func (pi *PostInteractor) PostsByUserIDs(users domain.ResUsers, postType string) (posts domain.Posts, err error) {
-	var userIDs []string
+func (pi *PostInteractor) PostsByUsers(users domain.ResUsers, postType string) (posts domain.Posts, err error) {
 	if len(users) > 0 {
+		var userIDs []string
 		for _, u := range users {
 			userIDs = append(userIDs, u.UserID)
 		}

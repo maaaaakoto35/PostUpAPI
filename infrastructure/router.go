@@ -37,6 +37,7 @@ func Init() {
 
 	// user
 	r.GET("/get-users", func(r echo.Context) error { return userController.GetUsers(r) })
+	r.GET("/user/:user_id", func(r echo.Context) error { return userController.GetUser(r) })
 	r.POST("/update-user/:user_id", func(r echo.Context) error { return userController.UpdateUser(r) })
 	r.DELETE("/delete-users/:id", func(r echo.Context) error { return userController.DeleteUser(r) })
 	r.GET("/my", func(r echo.Context) error {

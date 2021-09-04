@@ -114,12 +114,12 @@ func (controller *PostController) GetPostsImpl(c Context, userID string) (short 
 
 // GetShort this func is getting short for home.
 func (controller *PostController) GetPostsFollowing(c Context, following domain.ResUsers, postType string) (err error) {
-	posts, err := controller.Interactor.PostsByUserIDs(following, postType)
+	posts, err := controller.Interactor.PostsByUsers(following, postType)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, NewError(err))
 		return
 	}
-	c.JSON(http.StatusAccepted, posts)
+	c.JSON(http.StatusOK, posts)
 	return
 }
 
